@@ -6,7 +6,8 @@ Class {
 
 { #category : #baselines }
 BaselineOfMSeven >> baseline: spec [
-
+	<baseline>
+	
 	spec for: #common
 		do: [
 			"Dependencies"
