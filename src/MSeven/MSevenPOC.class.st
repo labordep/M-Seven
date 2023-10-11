@@ -101,6 +101,53 @@ MSevenPOC class >> testView [
 ]'
 ]
 
+{ #category : #private }
+MSevenPOC >> applyMode7Transform: aForm [
+	| screenResolution halfWidth halfHeight focalLens scale textureSize floor screen width height |
+
+	screenResolution := 240@160.
+	width := screenResolution x.
+	height := screenResolution y.
+	halfWidth := (screenResolution x / 2) asInteger.
+	halfHeight := (screenResolution y / 2) asInteger.
+	focalLens := 250.
+	scale := 100.
+	
+	floor := aForm.
+	textureSize := floor width @ floor height. 
+	screen := (Form extent: screenResolution depth: 32) fillBlack.
+	"screen colors: (Array with: Color yellow)."
+	
+	"iterating over the screen array"
+	1 to: width do:[ :i | 
+		halfHeight to: height do:[ :j | | x y z px py floorPos floorColor attenuation |
+			"x y z"
+			x := halfWidth - i.
+			y := j + focalLens.
+			z := j - halfHeight + 0.01.
+			
+			"projection"
+			px := x / z * scale.
+			py := y / z * scale.
+			
+			"floor pixel pos and color"
+			floorPos := ((px \\ (textureSize x)) asInteger) @ ((py \\ (textureSize y)) asInteger). 
+			floorColor := floor colorAt: floorPos.
+			
+			"shading & fog"
+			attenuation := (1.5 * ((z abs) / halfHeight)) max: 0; min: 1.
+			floorColor := floorColor adjustBrightness: ((1 - (attenuation)) negated).
+			
+			"fill screen"
+			screen colorAt: (i@j) put: floorColor.
+			screen colorAt: (i@(height - j)) put: floorColor.
+		].
+	].
+	
+	^ screen
+	
+]
+
 { #category : #initialization }
 MSevenPOC >> initialize [ 
 	
@@ -109,19 +156,20 @@ MSevenPOC >> initialize [
 	
 	view := self class testView materializeAsBlElement.
 	
-	self loadImageIn: view first.
-	
-	"Apply 2d matrix"
-	
-	
+	self loadImage: (ImageReadWriter formFromFileNamed: 'map3.png') in: view first.
+		
 	view first openInNewSpaceWithPyramidShortcut.
 ]
 
 { #category : #private }
-MSevenPOC >> loadImageIn: aBlElement [
+MSevenPOC >> loadImage: anImage in: aBlElement [
 
-	| image background |
-	image := ImageReadWriter formFromFileNamed: 'map1.png'.
+	| background image |
+	
+	"Transform image as Mode7"
+	image := self applyMode7Transform: anImage.
+	
+	"Apply to a background"
 	background := BlImageBackground image: image. 
 	
 	aBlElement background: background.
