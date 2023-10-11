@@ -125,20 +125,20 @@ MSevenPOC >> initialize [
 		
 	space := view openInNewSpaceWithPyramidShortcut.
 	
-	"Resize view to be full window"
-	space when: BlSpaceResizedEvent do: [ :e |
-		"self resizeScreen: space."
+	space when: BlSpaceResizedEvent do:[
+		screen scaledToSize: space extent
 	].
 	
 	cameraMove := [
 	| position |
 	position := 0@0.
-	[space isOpened] whileTrue:[ | angle |
-		position := position + (0.01@0).
+	[space isOpened] whileTrue:[ | angle time |
+		position ifNil:[position := 0@0].
+		time := [position := position + (0.01@0).
 		angle := (position x * 0.3) sin.
-		self moveCameraToPosition: position angle: angle.
-		16 milliSeconds wait.
-		view background: (BlImageBackground image: (screen scaledToSize: space extent)).
+		self moveCameraToPosition: position angle: angle] timeToRun asMilliSeconds.
+		((16 - time) max: 1) milliSeconds wait.
+		view background: (BlImageBackground image: screen copy).
 	]
 	] forkAt: Processor userBackgroundPriority named: 'M-SevenPOC1'. 
 	
@@ -150,7 +150,7 @@ MSevenPOC >> initializeTexture: aForm [
 
 	floorTexture := aForm.
 	floorTextureSize := floorTexture width @ floorTexture height. 
-	screen := (Form extent: screenResolution depth: 32) fillBlack.
+	screen := (Form extent: screenResolution depth: 8) fillBlack.
 	
 	self moveCameraToPosition: 0@0.
 	
@@ -188,7 +188,7 @@ MSevenPOC >> moveCameraToPosition: aPoint angle: anAngle [
 	halfWidth := (screenResolution x / 2) asInteger.
 	halfHeight := (screenResolution y / 2) asInteger.
 	focalLens := 250.
-	scale := 200.
+	scale := 100.
 	position := aPoint.
 
 	sin := anAngle sin.
@@ -220,18 +220,8 @@ MSevenPOC >> moveCameraToPosition: aPoint angle: anAngle [
 			
 			"fill screen"
 			screen colorAt: (i@j) put: floorColor.
-			"screen colorAt: (i@(height - j)) put: floorColor."
 		].
 	].
 
 	^ screen
-]
-
-{ #category : #initialization }
-MSevenPOC >> resizeScreen: aSpace [
-
-	"view size: aSpace extent."
-	"view transformDo:[ :t | 
-		t scaleBy: (aSpace extent / screenResolution)
-	]."
 ]
