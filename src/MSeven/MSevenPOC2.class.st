@@ -16,16 +16,16 @@ MSevenPOC2 class >> start [
 	self new.
 ]
 
-{ #category : #accessing }
+{ #category : #'pyramid-serialized-bloc' }
 MSevenPOC2 class >> view [
 	"This class has been generated using Pyramid.
 
 	By: labordep
-	2023-10-12 00:03:11"
+	2023-10-12 23:47:28"
 
 	<pySTON>
 	^ '[
-	BlElement {
+	MSevenAeSurfaceBlElement {
 		#children : BlChildrenArray [ ],
 		#constraints : BlLayoutCommonConstraints {
 			#vertical : BlLayoutCommonConstraintsAxis {
@@ -50,15 +50,8 @@ MSevenPOC2 class >> view [
 			#accountTransformation : false
 		},
 		#visuals : BlCustomVisuals {
-			#background : BlPaintBackground {
-				#paint : BlColorPaint {
-					#color : Color {
-						#red : 0.6920821114369502,
-						#green : 0.4359726295210166,
-						#blue : 0.24926686217008798,
-						#alpha : 1.0
-					}
-				}
+			#background : BlTransparentBackground {
+				
 			}
 		},
 		#userData : IdentityDictionary {
@@ -68,7 +61,7 @@ MSevenPOC2 class >> view [
 		},
 		#layout : BlFlowLayout {
 			#measurer : BlFlowLayoutMeasurer {
-				#layout : @17,
+				#layout : @15,
 				#children : OrderedCollection [ ],
 				#lines : OrderedCollection [
 					BlFlowLayoutLine {
@@ -77,7 +70,7 @@ MSevenPOC2 class >> view [
 						#startBreadth : 0,
 						#length : 0,
 						#breadth : 0,
-						#measurer : @18
+						#measurer : @16
 					}
 				],
 				#orientation : BlFlowLayoutHorizontal { },
@@ -89,7 +82,7 @@ MSevenPOC2 class >> view [
 				},
 				#heightMode : BlMeasurementSpec {
 					#size : 600.0,
-					#mode : @25
+					#mode : @23
 				},
 				#checkCanFit : true
 			},
@@ -115,11 +108,11 @@ MSevenPOC2 >> initialize [
 	
 	viewResolution := 256@240.
 	view := self class view materializeAsBlElement first.
+		
 	space := view openInNewSpaceWithPyramidShortcut.
 	self initializeMap: MSevenResources checkerboardTexture.
 	
-	self moveCameraToPosition: 0@0 angle: 0.
-	self updateView.
+	view surface: viewSurface.
 	
 	[ | position |
 	
@@ -130,7 +123,7 @@ MSevenPOC2 >> initialize [
 			angle := (position x * 0.3) sin.
 			self moveCameraToPosition: position angle: angle] timeToRun asMilliSeconds.
 			((16 - time) max: 1) milliSeconds wait.
-			view background: (BlImageBackground image: viewSurface asForm).
+			view invalidate.
 		].
 	
 	] forkAt: Processor userBackgroundPriority named: 'M-SevenPOC2'. 
@@ -162,7 +155,8 @@ MSevenPOC2 >> moveCameraToPosition: aPoint angle: anAngle [
 	cos := anAngle cos.
 	
 	beginHeight := height * 0.3.
-		
+
+	viewSurface flush.	
 	viewContext := viewSurface newContext.
 		
 	"iterating over the screen array"
@@ -193,11 +187,4 @@ MSevenPOC2 >> moveCameraToPosition: aPoint angle: anAngle [
 			viewContext sourceColor: floorColor; rectangle: (i@j extent: 1@1); fill.
 		].
 	].
-]
-
-{ #category : #initialization }
-MSevenPOC2 >> updateView [
-
-	"get the texture and apply it to the view"
-	
 ]
