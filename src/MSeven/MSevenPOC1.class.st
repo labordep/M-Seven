@@ -1,5 +1,5 @@
 Class {
-	#name : #MSevenPOC,
+	#name : #MSevenPOC1,
 	#superclass : #Object,
 	#instVars : [
 		'floorTexture',
@@ -14,14 +14,14 @@ Class {
 }
 
 { #category : #'pyramid-serialized-bloc' }
-MSevenPOC class >> start [
+MSevenPOC1 class >> start [
 	<script>
 	
 	self new.
 ]
 
 { #category : #'pyramid-serialized-bloc' }
-MSevenPOC class >> testView [
+MSevenPOC1 class >> testView [
 	"This class has been generated using Pyramid.
 
 	By: labordep
@@ -112,54 +112,50 @@ MSevenPOC class >> testView [
 ]
 
 { #category : #initialization }
-MSevenPOC >> initialize [ 
+MSevenPOC1 >> initialize [ 
 	
 	super initialize.
 	
 	screenResolution := 256@240. 
-
-	view := self class testView materializeAsBlElement.
-	view := view first.
+	view := self class testView materializeAsBlElement first.
 	
-	self loadTexture: (ImageReadWriter formFromFileNamed: 'map2.png') in: view.
+	self loadTexture: MSevenResources checkerboardTexture in: view.
 		
 	space := view openInNewSpaceWithPyramidShortcut.
-	
 	space when: BlSpaceResizedEvent do:[
 		screen scaledToSize: space extent
 	].
 	
-	cameraMove := [
-	| position |
-	position := 0@0.
-	[space isOpened] whileTrue:[ | angle time |
-		position ifNil:[position := 0@0].
-		time := [position := position + (0.01@0).
-		angle := (position x * 0.3) sin.
-		self moveCameraToPosition: position angle: angle] timeToRun asMilliSeconds.
-		((16 - time) max: 1) milliSeconds wait.
-		view background: (BlImageBackground image: screen copy).
-	]
+	cameraMove := [ | position |
+	
+		position := 0@0.
+		[space isOpened] whileTrue:[ | angle time |
+			position ifNil:[position := 0@0].
+			time := [position := position + (0.01@0).
+			angle := (position x * 0.3) sin.
+			self moveCameraToPosition: position angle: angle] timeToRun asMilliSeconds.
+			((16 - time) max: 1) milliSeconds wait.
+			view background: (BlImageBackground image: screen copy).
+		].
+	
 	] forkAt: Processor userBackgroundPriority named: 'M-SevenPOC1'. 
 	
 	
 ]
 
-{ #category : #private }
-MSevenPOC >> initializeTexture: aForm [
+{ #category : #texture }
+MSevenPOC1 >> initializeTexture: aForm [
 
 	floorTexture := aForm.
 	floorTextureSize := floorTexture width @ floorTexture height. 
 	screen := (Form extent: screenResolution depth: 8) fillBlack.
 	
-	self moveCameraToPosition: 0@0.
-	
 	^ screen
 	
 ]
 
-{ #category : #private }
-MSevenPOC >> loadTexture: anImage in: aBlElement [
+{ #category : #texture }
+MSevenPOC1 >> loadTexture: anImage in: aBlElement [
 
 	| background screenImage |
 	
@@ -172,14 +168,14 @@ MSevenPOC >> loadTexture: anImage in: aBlElement [
 	aBlElement background: background.
 ]
 
-{ #category : #private }
-MSevenPOC >> moveCameraToPosition: aPoint [
+{ #category : #moving }
+MSevenPOC1 >> moveCameraToPosition: aPoint [
 
 	^ self moveCameraToPosition: aPoint angle: 0
 ]
 
-{ #category : #private }
-MSevenPOC >> moveCameraToPosition: aPoint angle: anAngle [
+{ #category : #moving }
+MSevenPOC1 >> moveCameraToPosition: aPoint angle: anAngle [
 
 	| width height halfWidth halfHeight focalLens scale position sin cos |
 
