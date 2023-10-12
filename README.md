@@ -8,7 +8,9 @@
 
 # M-Seven
 
-M-Seven is a game.
+This project is inspired by : 
+- https://www.coranac.com/tonc/text/mode7.htm
+- https://github.com/StanislavPetrovV/Mode7
 
 ## Getting Started
 
