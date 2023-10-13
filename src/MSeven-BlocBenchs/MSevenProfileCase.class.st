@@ -5,16 +5,31 @@ Class {
 }
 
 { #category : #examples }
-MSevenProfileCase class >> example [
+MSevenProfileCase class >> exampleFPS [
 
 	[ 	| case |
 		case := MSevenProfileCase new
 			hostClass: BlOSWindowSDL2Host;
-			duration: 7 seconds;
+			duration: 10 seconds;
 			yourself.
 
 		(BlProfileRunner newForCase: case)
 			enableFPS;
+			run;
+			openMeterReports ] fork
+]
+
+{ #category : #examples }
+MSevenProfileCase class >> exampleProfile [
+
+	[ 	| case |
+		case := MSevenProfileCase new
+			hostClass: BlOSWindowSDL2Host;
+			duration: 5 seconds;
+			yourself.
+
+		(BlProfileRunner newForCase: case)
+			enableASProfiler;
 			run;
 			openMeterReports ] fork
 ]
