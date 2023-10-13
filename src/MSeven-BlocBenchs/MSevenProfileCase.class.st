@@ -4,6 +4,21 @@ Class {
 	#category : #'MSeven-BlocBenchs'
 }
 
+{ #category : #examples }
+MSevenProfileCase class >> example [
+
+	[ 	| case |
+		case := MSevenProfileCase new
+			hostClass: BlOSWindowSDL2Host;
+			duration: 7 seconds;
+			yourself.
+
+		(BlProfileRunner newForCase: case)
+			enableFPS;
+			run;
+			openMeterReports ] fork
+]
+
 { #category : #printing }
 MSevenProfileCase >> label [
 
