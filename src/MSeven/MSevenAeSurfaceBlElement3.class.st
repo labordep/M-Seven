@@ -64,7 +64,7 @@ MSevenAeSurfaceBlElement3 >> refreshCameraSurface [
 
 	"iterating over the screen array"
 	1 to: width do: [ :i |
-		beginHeight rounded to: height do: [ :j |
+		beginHeight ceiling to: height do: [ :j |
 			| x y z px py rx ry floorPos floorColor attenuation |
 			"x y z"
 			x := halfWidth - i.
@@ -91,7 +91,7 @@ MSevenAeSurfaceBlElement3 >> refreshCameraSurface [
 			
 			"fill a pixel"
 			bufferAddress
-				uint32AtOffset: (j * horizontalLineByteLength) + (i << 2)
+				uint32AtOffset: ((j - 1) * horizontalLineByteLength) + ((i - 1) << 2)
 				put: floorColor asPremultipliedARGB32Integer ] ].
 
 	cameraSurface markDirty
