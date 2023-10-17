@@ -1,6 +1,13 @@
+"
+I am a profile case for MSevenPOC3.
+"
 Class {
 	#name : #MSevenProfileCase,
 	#superclass : #BlFixedDurationProfileCase,
+	#instVars : [
+		'spaceExtentFactor',
+		'viewResolution'
+	],
 	#category : #'MSeven-BlocBenchs'
 }
 
@@ -34,6 +41,15 @@ MSevenProfileCase class >> exampleProfile [
 			openMeterReports ] fork
 ]
 
+{ #category : #initialization }
+MSevenProfileCase >> initialize [
+
+	super initialize.
+	
+	viewResolution := 256 @ 240.
+	spaceExtentFactor := 1
+]
+
 { #category : #printing }
 MSevenProfileCase >> label [
 
@@ -44,12 +60,11 @@ MSevenProfileCase >> label [
 MSevenProfileCase >> newElement [
 	"Answer the element under study."
 
-	| viewResolution view position angle |
-	viewResolution := 256 @ 240.
+	| view position angle |
 	view := MSevenPOC3 view materializeAsBlElement first.
 	view
 		map: MSevenResources checkerboardTexture
-		cameraResolution: viewResolution.
+		cameraResolution: self viewResolution.
 
 	position := 0@0.
 	view enqueueTask:
@@ -65,4 +80,34 @@ MSevenProfileCase >> newElement [
 			yourself).
 
 	^ view
+]
+
+{ #category : #hooks }
+MSevenProfileCase >> spaceExtent [
+
+	^ (self viewResolution * spaceExtentFactor) asIntegerPoint + 10 asPoint
+]
+
+{ #category : #accessing }
+MSevenProfileCase >> spaceExtentFactor [
+
+	^ spaceExtentFactor
+]
+
+{ #category : #accessing }
+MSevenProfileCase >> spaceExtentFactor: aPositiveInteger [
+
+	spaceExtentFactor := aPositiveInteger
+]
+
+{ #category : #accessing }
+MSevenProfileCase >> viewResolution [
+
+	^ viewResolution
+]
+
+{ #category : #accessing }
+MSevenProfileCase >> viewResolution: aPoint [
+
+	viewResolution := aPoint
 ]
