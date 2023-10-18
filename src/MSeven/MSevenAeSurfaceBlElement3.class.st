@@ -17,6 +17,8 @@ Class {
 MSevenAeSurfaceBlElement3 >> aeDrawGeometryOn: aeCanvas [
 	"Ignore geometry and other visual properties and directly show a fresh camera surface."
 
+	pattern ifNil:[ ^ self ].
+
 	self refreshCameraSurface.
 	aeCanvas privateAeCairoContext
 		source: pattern;
@@ -70,6 +72,9 @@ MSevenAeSurfaceBlElement3 >> map: aForm cameraResolution: aPoint [
 MSevenAeSurfaceBlElement3 >> refreshCameraSurface [
 
 	| width height halfWidth halfHeight focalLens scale sin cos beginHeight bufferAddress horizontalLineByteLength |
+	
+	cameraResolution ifNil:[ ^ self ].
+	
 	width := cameraResolution x.
 	height := cameraResolution y.
 	halfWidth := (cameraResolution x / 2) asInteger.
