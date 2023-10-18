@@ -10,6 +10,8 @@ Class {
 { #category : #drawing }
 MSevenAeSurfaceBlElement >> aeDrawOn: aeCanvas [
 
+	surface ifNil:[ ^ self ].
+	
     self aeDrawOn: aeCanvas with: [
 
         "My position is applied before my transformation matrix,
