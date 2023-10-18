@@ -6,7 +6,9 @@ Class {
 		'cameraSurface',
 		'cameraResolution',
 		'cameraAngle',
-		'cameraPosition'
+		'cameraPosition',
+		'pattern',
+		'scaleFactor'
 	],
 	#category : #'MSeven-POC'
 }
@@ -17,8 +19,9 @@ MSevenAeSurfaceBlElement3 >> aeDrawGeometryOn: aeCanvas [
 
 	self refreshCameraSurface.
 	aeCanvas privateAeCairoContext
-		sourceSurface: cameraSurface x: 0.0 y: 0.0;
-		paint
+		source: pattern;
+		rectangleTo: self size;
+		fill
 ]
 
 { #category : #accessing }
@@ -30,6 +33,14 @@ MSevenAeSurfaceBlElement3 >> cameraPosition: aPoint cameraAngle: aNumber [
 ]
 
 { #category : #initialization }
+MSevenAeSurfaceBlElement3 >> initialize [
+
+	super initialize.
+	
+	scaleFactor := 1.0
+]
+
+{ #category : #accessing }
 MSevenAeSurfaceBlElement3 >> map: aForm cameraResolution: aPoint [
 
 	map := aForm.
@@ -42,7 +53,17 @@ MSevenAeSurfaceBlElement3 >> map: aForm cameraResolution: aPoint [
 			format: AeCairoSurfaceFormat argb32.
 	cameraSurface newContext
 		sourceColor: Color black;
-		paint
+		paint.
+
+	pattern := AeCairoSurfacePattern surface: cameraSurface.
+	pattern filter: AeCairoSamplingFilter nearest.
+	
+	"By default, patterns have the identity matrix.
+	Then, we will only change it if really needed."
+	(scaleFactor closeTo: 1.0) ifFalse: [
+		pattern matrix: (AeCairoMatrix
+			newScalingByX: 1.0 / scaleFactor
+			            y: 1.0 / scaleFactor) ]
 ]
 
 { #category : #initialization }
@@ -95,4 +116,10 @@ MSevenAeSurfaceBlElement3 >> refreshCameraSurface [
 				put: floorColor asPremultipliedARGB32Integer ] ].
 
 	cameraSurface markDirty
+]
+
+{ #category : #accessing }
+MSevenAeSurfaceBlElement3 >> scaleFactor: aFloat [
+
+	scaleFactor := aFloat
 ]
