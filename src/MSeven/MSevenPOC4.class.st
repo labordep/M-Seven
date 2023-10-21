@@ -8,7 +8,17 @@ Class {
 		'surfaceElement',
 		'worldTexture',
 		'cameraPosition',
-		'angle'
+		'cameraAltitude',
+		'cameraAngle',
+		'cameraSpeed',
+		'isArrowUpPressed',
+		'isArrowDownPressed',
+		'isAltitudeDownPressed',
+		'isAltitudeUpPressed',
+		'isLeftPressed',
+		'isRightPressed',
+		'isArrowLeftPressed',
+		'isArrowRightPressed'
 	],
 	#category : #'MSeven-POC'
 }
@@ -25,7 +35,7 @@ MSevenPOC4 class >> view [
 	"This class has been generated using Pyramid.
 
 	By: labordep
-	2023-10-19 18:37:42"
+	2023-10-21 14:03:17"
 
 	<pySTON>
 	^ '[
@@ -65,7 +75,8 @@ MSevenPOC4 class >> view [
 				#userData : IdentityDictionary {
 					#elementId : BlElementNamedId {
 						#identifier : #background
-					}
+					},
+					#shouldHandleMousePickOutsideEvent : false
 				},
 				#layout : BlBasicLayout { }
 			},
@@ -97,7 +108,8 @@ MSevenPOC4 class >> view [
 				#userData : IdentityDictionary {
 					#elementId : BlElementNamedId {
 						#identifier : #texture
-					}
+					},
+					#shouldHandleMousePickOutsideEvent : false
 				},
 				#layout : BlBasicLayout { }
 			},
@@ -133,7 +145,8 @@ MSevenPOC4 class >> view [
 				#userData : IdentityDictionary {
 					#elementId : BlElementNamedId {
 						#identifier : #title
-					}
+					},
+					#shouldHandleMousePickOutsideEvent : false
 				},
 				#layout : @19,
 				#text : BlRopedText {
@@ -156,6 +169,44 @@ MSevenPOC4 class >> view [
 						#rope : BlCollectionRope {
 							#collection : ''M-Seven Proof Of Concept #4''
 						}
+					}
+				}
+			},
+			BlTextElement {
+				#children : BlChildrenArray [ ],
+				#constraints : BlLayoutCommonConstraints {
+					#vertical : BlLayoutCommonConstraintsAxis {
+						#resizer : BlLayoutFitContentResizer { }
+					},
+					#horizontal : BlLayoutCommonConstraintsAxis {
+						#resizer : @55
+					},
+					#position : Point [ 19.0, 43.0 ],
+					#margin : BlInsets {
+						#top : 0.0,
+						#left : 0.0,
+						#bottom : 0.0,
+						#right : 0.0
+					},
+					#padding : @58,
+					#minHeight : 0.0,
+					#minWidth : 0.0,
+					#maxHeight : @12,
+					#maxWidth : @12,
+					#ignoredByLayout : false,
+					#accountTransformation : false
+				},
+				#visuals : BlDefaultVisuals { },
+				#userData : IdentityDictionary {
+					#elementId : BlElementNamedId {
+						#identifier : #instructions
+					},
+					#shouldHandleMousePickOutsideEvent : false
+				},
+				#layout : BlBasicLayout { },
+				#text : BlRopedText {
+					#rope : BlCollectionRope {
+						#collection : ''To translate: ZQSD / WASD, to turn: Left/Right arrow, to -/+ alt : R/T''
 					}
 				}
 			}
@@ -183,7 +234,8 @@ MSevenPOC4 class >> view [
 		#userData : IdentityDictionary {
 			#elementId : BlElementNamedId {
 				#identifier : #pane
-			}
+			},
+			#shouldHandleMousePickOutsideEvent : false
 		},
 		#layout : @19
 	}
@@ -197,11 +249,28 @@ MSevenPOC4 >> initialize [
 	
 	computingResolution := 256@240.
 	worldTexture := MSevenResources pharoTexture.
+	cameraPosition := 0@0.
+	cameraAltitude := 1.0.
+	cameraAngle := 0.
+	cameraSpeed := 0.1.
+	
+	isArrowUpPressed := false.
+	isArrowDownPressed := false.
+	isLeftPressed := false.
+	isRightPressed := false. 
+	isAltitudeDownPressed := false.
+	isAltitudeUpPressed := false.
+	isArrowLeftPressed := false.
+	isArrowRightPressed := false.
 	
 	self initializeView. 
 	self startSurfaceElementUpdate.
 	
 	space := view openInNewSpaceWithPyramidShortcut.
+	
+	"Install key listener"
+	space when: BlKeyDownEvent do:[ :anEvent | self processKeyDownEvent: anEvent ].
+	space when: BlKeyUpEvent do:[ :anEvent | self processKeyUpEvent: anEvent ]. 
 ]
 
 { #category : #initialization }
@@ -216,18 +285,118 @@ MSevenPOC4 >> initializeView [
 	
 ]
 
+{ #category : #listeners }
+MSevenPOC4 >> processKeyDownEvent: anEvent [
+
+	"Set the key down state for movement keys"
+	"Arrow or ZQSD/WASD for azerty/qwerty keyboard"
+
+	(anEvent key isArrowUp or:[anEvent key = (KeyboardKey Z) or:[anEvent key = (KeyboardKey W)]]) ifTrue:[
+		isArrowUpPressed := true.
+		^ self
+	].
+
+	(anEvent key isArrowDown or:[anEvent key = (KeyboardKey S)]) ifTrue:[
+		isArrowDownPressed := true.
+		^self	
+	].
+
+	(anEvent key = (KeyboardKey Q) or:[anEvent key = (KeyboardKey A)]) ifTrue:[
+		isLeftPressed := true. 
+		^self	
+	].
+
+	(anEvent key = (KeyboardKey D)) ifTrue:[
+		isRightPressed := true.
+		^self	
+	].
+
+	"Altitude management : R/T"
+	anEvent key = (KeyboardKey R) ifTrue:[
+		isAltitudeDownPressed := true.
+		^self	
+	]. 
+
+	anEvent key = (KeyboardKey T) ifTrue:[
+		isAltitudeUpPressed := true.
+		^self	
+	].
+	
+	"Angle management : LEFT / RIGHT arrows" 
+	anEvent key isArrowLeft ifTrue:[
+		isArrowLeftPressed := true.
+		^self	
+	].
+
+	anEvent key isArrowRight ifTrue:[
+		isArrowRightPressed := true.
+		^self	
+	].
+	
+]
+
+{ #category : #listeners }
+MSevenPOC4 >> processKeyUpEvent: anEvent [
+
+	"Set the key up state for movement keys"
+	"Arrow or ZQSD/WASD for azerty/qwerty keyboard"
+
+	(anEvent key isArrowUp or:[anEvent key = (KeyboardKey Z) or:[anEvent key = (KeyboardKey W)]]) ifTrue:[
+		isArrowUpPressed := false.
+		^ self
+	].
+
+	(anEvent key isArrowDown or:[anEvent key = (KeyboardKey S)]) ifTrue:[
+		isArrowDownPressed := false.
+		^self	
+	].
+
+	(anEvent key = (KeyboardKey Q) or:[anEvent key = (KeyboardKey A)]) ifTrue:[
+		isLeftPressed := false. 
+		^self	
+	].
+
+	(anEvent key = (KeyboardKey D)) ifTrue:[
+		isRightPressed := false.
+		^self	
+	].
+
+	"Altitude management : R/T"
+	anEvent key = (KeyboardKey R) ifTrue:[
+		isAltitudeDownPressed := false.
+		^self	
+	]. 
+
+	anEvent key = (KeyboardKey T) ifTrue:[
+		isAltitudeUpPressed := false.
+		^self	
+	].
+	
+	"Angle management : LEFT / RIGHT arrows" 
+	anEvent key isArrowLeft ifTrue:[
+		isArrowLeftPressed := false.
+		^self	
+	].
+
+	anEvent key isArrowRight ifTrue:[
+		isArrowRightPressed := false.
+		^self	
+	].
+]
+
 { #category : #initialization }
 MSevenPOC4 >> startSurfaceElementUpdate [
 	| transition |
 	
-	cameraPosition := 0@0.
-	angle := 0.0.
 	surfaceElement map: worldTexture cameraResolution: computingResolution.
 	
 	transition := BlNumberTransition new 
 		from: 0; 
 		to: 1; 
-		onStepDo: [ :t | self transitionStep: t ]; 
+		onStepDo: [ :t | 
+			self updateMovementStep: t.
+			self updateSurfaceStep: t 
+		]; 
 		beInfinite; 
 		yourself.
 	
@@ -238,12 +407,38 @@ MSevenPOC4 >> startSurfaceElementUpdate [
 	
 ]
 
-{ #category : #initialization }
-MSevenPOC4 >> transitionStep: aNumber [
+{ #category : #private }
+MSevenPOC4 >> updateMovementStep: aNumber [
+	"Compute movement depending down/up keys"
+	
+	| sin cos dx dy speedCos speedSin |
+	sin := cameraAngle sin.
+	cos := cameraAngle cos.
+	dx := 0. dy := 0.
+	speedSin := cameraSpeed * sin.
+	speedCos := cameraSpeed * cos.
+	
+	isArrowUpPressed ifTrue:[ dx := dx - speedCos. dy := dy - speedSin ].
+	isArrowDownPressed ifTrue:[ dx := dx + speedCos. dy := dy + speedSin ].
+	isLeftPressed ifTrue:[ dx := dx - speedSin. dy := dy + speedCos ].
+	isRightPressed ifTrue:[ dx := dx + speedSin. dy := dy - speedCos ].
+	
+	cameraPosition := cameraPosition + (dx @ dy).
+	
+	isArrowLeftPressed ifTrue:[ cameraAngle := cameraAngle - cameraSpeed ].
+	isArrowRightPressed ifTrue:[ cameraAngle := cameraAngle + cameraSpeed ].
+	
+	isAltitudeUpPressed ifTrue:[ cameraAltitude := cameraAltitude + (cameraSpeed * 10) ].
+	isAltitudeDownPressed ifTrue:[ cameraAltitude := cameraAltitude - (cameraSpeed * 10) ].
+	
+	cameraAltitude := (cameraAltitude max: 0.001) min: 100.0.
+]
 
-	cameraPosition := cameraPosition - (0.2 @ 0).
-	angle := (cameraPosition x * 0.3) sin / 1.5.
-	surfaceElement cameraPosition: cameraPosition cameraAngle: angle.
+{ #category : #private }
+MSevenPOC4 >> updateSurfaceStep: aNumber [
+	
+	"Update surface"
+	surfaceElement cameraPosition: cameraPosition cameraAltitude: cameraAltitude cameraAngle: cameraAngle
 			
 
 	

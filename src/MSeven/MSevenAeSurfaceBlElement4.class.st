@@ -8,7 +8,10 @@ Class {
 		'cameraAngle',
 		'cameraPosition',
 		'pattern',
-		'scaleFactor'
+		'scaleFactor',
+		'cameraAltitude',
+		'focalLens',
+		'scale'
 	],
 	#category : #'MSeven-POC'
 }
@@ -34,10 +37,11 @@ MSevenAeSurfaceBlElement4 >> aeDrawGeometryOn: aeCanvas [
 ]
 
 { #category : #accessing }
-MSevenAeSurfaceBlElement4 >> cameraPosition: aPoint cameraAngle: aNumber [ 
+MSevenAeSurfaceBlElement4 >> cameraPosition: aPoint cameraAltitude: anAltitude cameraAngle: anAngle [
 
 	cameraPosition := aPoint.
-	cameraAngle := aNumber.
+	cameraAngle := anAngle. 
+	cameraAltitude := anAltitude.
 	self invalidate
 ]
 
@@ -46,7 +50,11 @@ MSevenAeSurfaceBlElement4 >> initialize [
 
 	super initialize.
 	
-	scaleFactor := 1.0
+	focalLens := 250.
+	scale := 100.
+	scaleFactor := 1.0.
+	cameraAltitude := 1.0.
+
 ]
 
 { #category : #accessing }
@@ -68,7 +76,7 @@ MSevenAeSurfaceBlElement4 >> map: aForm cameraResolution: aPoint [
 { #category : #initialization }
 MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 
-	| width height halfWidth halfHeight focalLens scale sin cos beginHeight bufferAddress horizontalLineByteLength |
+	| width height halfWidth halfHeight sin cos beginHeight bufferAddress horizontalLineByteLength altitude |
 	
 	cameraResolution ifNil:[ ^ self ].
 	
@@ -76,12 +84,10 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 	height := cameraResolution y.
 	halfWidth := (cameraResolution x / 2) asInteger.
 	halfHeight := (cameraResolution y / 2) asInteger.
-	focalLens := 250.
-	scale := 100.
 	sin := cameraAngle sin.
 	cos := cameraAngle cos.
 	beginHeight := height * 0.2.
-
+	altitude := cameraAltitude.
 	bufferAddress := cameraSurface data.
 	horizontalLineByteLength := cameraSurface stride.
 
@@ -92,7 +98,7 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 			"x y z"
 			x := halfWidth - i.
 			y := j + focalLens.
-			z := j - beginHeight + 0.01.
+			z := j - beginHeight + altitude.
 			
 			"rotation"
 			rx := (x * cos) - (y * sin).
@@ -115,7 +121,7 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 			"fill a pixel"
 			bufferAddress
 				uint32AtOffset: ((j - 1) * horizontalLineByteLength) + ((i - 1) << 2)
-				put: floorColor asPremultipliedARGB32Integer 
+				put: floorColor asPremultipliedARGB32Integer.
 		]. 
 	].
 
