@@ -26,7 +26,7 @@ MSevenAeSurfaceBlElement4 >> aeDrawGeometryOn: aeCanvas [
 	self refreshCameraSurface.
 	
 	"update scale factor"
-	newScale := (self size / cameraResolution) roundTo: 0.1.
+	newScale := (self size / cameraResolution).
 	newScale := (newScale x < newScale y ifTrue:[newScale x] ifFalse:[newScale y]).
 	self scaleFactor: newScale. 
 	

@@ -302,11 +302,25 @@ MSevenPOC4 >> initialize [
 	space when: BlSpaceResizedEvent do:[ :e | self computeWorldResolution. self updateSurfaceElementUpdate ].
 ]
 
-{ #category : #initialization }
+{ #category : #ui }
+MSevenPOC4 >> initializeToploUI [
+
+	"Set UI Theme"
+	| fullScreenButton |
+	view toTheme: ToBeeDarkTheme new.
+	
+	fullScreenButton := (ToButton id: #fullscreenButton) labelText: 'Fullscreen'; position: 300@10.
+	fullScreenButton whenClickedDo: [ self toggleFullscreen ].	
+	view addChild: fullScreenButton.
+]
+
+{ #category : #ui }
 MSevenPOC4 >> initializeView [
 
 	"Materialize the app view"
 	view := self class view materializeAsBlElement first.
+	
+	self initializeToploUI.
 	
 	"Get the surface element"
 	surfaceElement := view childWithId: #texture.
@@ -434,6 +448,13 @@ MSevenPOC4 >> startSurfaceElementUpdate [
 				
 
 	
+]
+
+{ #category : #actions }
+MSevenPOC4 >> toggleFullscreen [
+
+	space ifNil:[ ^ self ].
+	space fullscreen: (space fullscreen not).
 ]
 
 { #category : #private }
