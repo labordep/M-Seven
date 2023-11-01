@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'view',
 		'space',
-		'computingResolution',
 		'surfaceElement',
 		'worldTexture',
 		'cameraPosition',
@@ -18,7 +17,8 @@ Class {
 		'isLeftPressed',
 		'isRightPressed',
 		'isArrowLeftPressed',
-		'isArrowRightPressed'
+		'isArrowRightPressed',
+		'worldResolution'
 	],
 	#category : #'MSeven-POC'
 }
@@ -242,12 +242,40 @@ MSevenPOC4 class >> view [
 ]'
 ]
 
+{ #category : #private }
+MSevenPOC4 >> computeWorldResolution [
+	"Compute the world resolution to have correct ratio depending size of the application window to be in fullsize"
+
+	"resolution for ratio 4/3"
+	| windowSize ratio defaultWindowSize newWidth newResolution newHeight |
+	worldResolution := 256@192.
+	defaultWindowSize := 400@300.
+	
+	"get actual window size"
+	windowSize := space ifNil:[ defaultWindowSize ] ifNotNil:[ :s | s windowExtent ].
+	(windowSize x = 0 or:[ windowSize y = 0 ]) ifTrue:[windowSize := defaultWindowSize].
+	
+	"compute balance between preserving world resoltuion ratio and pixels size"
+	ratio := windowSize x / windowSize y.
+	ratio >= 1 ifTrue:[ 
+		"more larger than heighter" 
+		newWidth := windowSize x * worldResolution y / windowSize y.
+		newResolution := newWidth @ worldResolution y.
+	] ifFalse:[
+		"more heighter than larger"
+		newHeight := windowSize y * worldResolution x / windowSize x.
+		newResolution := worldResolution x @ newHeight.
+	].
+
+	worldResolution := newResolution rounded.
+]
+
 { #category : #initialization }
 MSevenPOC4 >> initialize [
 
 	super initialize.
+	self computeWorldResolution.
 	
-	computingResolution := 256@240.
 	worldTexture := MSevenResources pharoTexture.
 	cameraPosition := 0@0.
 	cameraAltitude := 1.0.
@@ -268,9 +296,10 @@ MSevenPOC4 >> initialize [
 	
 	space := view openInNewSpaceWithPyramidShortcut.
 	
-	"Install key listener"
-	space when: BlKeyDownEvent do:[ :anEvent | self processKeyDownEvent: anEvent ].
-	space when: BlKeyUpEvent do:[ :anEvent | self processKeyUpEvent: anEvent ]. 
+	"Install events listener"
+	space when: BlKeyDownEvent do:[ :e | self processKeyDownEvent: e ].
+	space when: BlKeyUpEvent do:[ :e | self processKeyUpEvent: e ]. 
+	space when: BlSpaceResizedEvent do:[ :e | self computeWorldResolution. self updateSurfaceElementUpdate ].
 ]
 
 { #category : #initialization }
@@ -388,7 +417,7 @@ MSevenPOC4 >> processKeyUpEvent: anEvent [
 MSevenPOC4 >> startSurfaceElementUpdate [
 	| transition |
 	
-	surfaceElement map: worldTexture cameraResolution: computingResolution.
+	surfaceElement map: worldTexture cameraResolution: worldResolution.
 	
 	transition := BlNumberTransition new 
 		from: 0; 
@@ -432,6 +461,13 @@ MSevenPOC4 >> updateMovementStep: aNumber [
 	isAltitudeDownPressed ifTrue:[ cameraAltitude := cameraAltitude - (cameraSpeed * 10) ].
 	
 	cameraAltitude := (cameraAltitude max: 0.001) min: 100.0.
+]
+
+{ #category : #initialization }
+MSevenPOC4 >> updateSurfaceElementUpdate [
+	"Call this method to change the computing resolution after an application window resize"
+	
+	surfaceElement cameraResolution: worldResolution
 ]
 
 { #category : #private }

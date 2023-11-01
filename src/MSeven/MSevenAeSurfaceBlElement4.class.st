@@ -45,6 +45,15 @@ MSevenAeSurfaceBlElement4 >> cameraPosition: aPoint cameraAltitude: anAltitude c
 	self invalidate
 ]
 
+{ #category : #accessing }
+MSevenAeSurfaceBlElement4 >> cameraResolution: aPoint [
+
+	cameraResolution = aPoint ifTrue:[ ^ self ].
+	cameraResolution := aPoint.
+
+	self prepareViewTextureBuffer
+]
+
 { #category : #initialization }
 MSevenAeSurfaceBlElement4 >> initialize [
 
@@ -63,6 +72,12 @@ MSevenAeSurfaceBlElement4 >> map: aForm cameraResolution: aPoint [
 	map := aForm flipHorizontally.
 	cameraResolution := aPoint.
 
+	self prepareViewTextureBuffer.
+]
+
+{ #category : #accessing }
+MSevenAeSurfaceBlElement4 >> prepareViewTextureBuffer [
+
 	"prepare view texture buffer"
 	cameraSurface :=
 		AeCairoImageSurface
@@ -79,6 +94,7 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 	| width height halfWidth halfHeight sin cos beginHeight bufferAddress horizontalLineByteLength altitude |
 	
 	cameraResolution ifNil:[ ^ self ].
+	cameraSurface ifNil:[ ^ self ].
 	
 	width := cameraResolution x.
 	height := cameraResolution y.
@@ -131,15 +147,13 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 { #category : #accessing }
 MSevenAeSurfaceBlElement4 >> scaleFactor: aFloat [
 
-	scaleFactor ~= aFloat ifTrue:[
+	scaleFactor = aFloat ifTrue:[ ^ self ].
 
-		scaleFactor := aFloat.
+	scaleFactor := aFloat.
 		
-		"By default, patterns have the identity matrix.
-		Then, we will only change it if really needed."
-		(scaleFactor closeTo: 1.0) ifFalse: [
-			pattern matrix: (AeCairoMatrix	newScalingByX: 1.0 / scaleFactor y: 1.0 / scaleFactor)
-		]
-		
-	].
+	"By default, patterns have the identity matrix.
+	Then, we will only change it if really needed."
+	(scaleFactor closeTo: 1.0) ifFalse: [
+		pattern matrix: (AeCairoMatrix	newScalingByX: 1.0 / scaleFactor y: 1.0 / scaleFactor)
+	]
 ]
