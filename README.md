@@ -12,11 +12,21 @@ This project is inspired by :
 - https://www.coranac.com/tonc/text/mode7.htm
 - https://github.com/StanislavPetrovV/Mode7
 
+## Proof Of Concept 4
+
+Introducing interactions and HUD.
+
+https://github.com/labordep/M-Seven/assets/49183340/77327fcb-84d1-4f7d-92e0-57279ddccaaa
+
 ## Proof Of Concept 3
+
+Working on performances and rendering.
 
 https://github.com/labordep/M-Seven/assets/49183340/bda48b49-a2fb-4e0d-8d8b-0a6563afccb2
 
 ## Proof Of Concept 1
+
+Implementing algorithms.
 
 https://github.com/labordep/M-Seven/assets/49183340/dedc6154-ce2b-4f85-b2ab-43d0e500545c
 
