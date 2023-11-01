@@ -310,6 +310,7 @@ MSevenPOC4 >> initializeToploUI [
 	view toTheme: ToBeeDarkTheme new.
 	
 	fullScreenButton := (ToButton id: #fullscreenButton) labelText: 'Fullscreen'; position: 300@10.
+	fullScreenButton withStamp: #primary.
 	fullScreenButton whenClickedDo: [ self toggleFullscreen ].	
 	view addChild: fullScreenButton.
 ]
