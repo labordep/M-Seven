@@ -425,8 +425,8 @@ MSevenPOC4 >> updateMovementStep: aNumber [
 	
 	cameraPosition := cameraPosition + (dx @ dy).
 	
-	isArrowLeftPressed ifTrue:[ cameraAngle := cameraAngle - cameraSpeed ].
-	isArrowRightPressed ifTrue:[ cameraAngle := cameraAngle + cameraSpeed ].
+	isArrowLeftPressed ifTrue:[ cameraAngle := cameraAngle - (cameraSpeed / 3) ].
+	isArrowRightPressed ifTrue:[ cameraAngle := cameraAngle + (cameraSpeed / 3) ].
 	
 	isAltitudeUpPressed ifTrue:[ cameraAltitude := cameraAltitude + (cameraSpeed * 10) ].
 	isAltitudeDownPressed ifTrue:[ cameraAltitude := cameraAltitude - (cameraSpeed * 10) ].
