@@ -22,7 +22,7 @@ BaselineOfMSeven >> baseline: spec [
 BaselineOfMSeven >> dependencies: spec [
 
 	"2D : Bloc"
-	spec baseline: #Bloc with: [ spec repository: 'github://pharo-graphics/Bloc:dev-1.0/src' ].
+	spec baseline: 'Bloc' with: [ spec repository: 'github://pharo-graphics/Bloc:dev-1.0/src' ].
 
 	"UI : Toplo"
 	spec baseline: 'Toplo' with: [ spec repository: 'github://plantec/Toplo:main/src' ].
