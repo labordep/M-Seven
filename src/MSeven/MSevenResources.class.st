@@ -8,7 +8,7 @@ Memo :
 Class {
 	#name : #MSevenResources,
 	#superclass : #Object,
-	#category : #'MSeven-POC'
+	#category : #'MSeven-Assets'
 }
 
 { #category : #textures }
