@@ -11,7 +11,7 @@ Class {
 { #category : #accessing }
 MSevenCamera >> coordinates [
 
-	^ coordinates ifNil:[ coordinates := MSeven3DCoordinates new ]
+	^ coordinates ifNil:[ coordinates := MSevenCoordinates new ]
 ]
 
 { #category : #accessing }

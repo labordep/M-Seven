@@ -1,5 +1,5 @@
 Class {
-	#name : #MSeven3DCoordinates,
+	#name : #MSevenCoordinates,
 	#superclass : #Object,
 	#instVars : [
 		'pitch',
@@ -11,49 +11,49 @@ Class {
 }
 
 { #category : #accessing }
-MSeven3DCoordinates >> pitch [
+MSevenCoordinates >> pitch [
 
 	^ pitch ifNil:[ pitch := 0 ]
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> pitch: anObject [
+MSevenCoordinates >> pitch: anObject [
 
 	pitch := anObject
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> position [
+MSevenCoordinates >> position [
 
 	^ position ifNil:[ position := BlVector3D zero ]
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> position: anObject [
+MSevenCoordinates >> position: anObject [
 
 	position := anObject
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> roll [
+MSevenCoordinates >> roll [
 
 	^ roll ifNil:[ roll := 0 ]
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> roll: anObject [
+MSevenCoordinates >> roll: anObject [
 
 	roll := anObject
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> yaw [
+MSevenCoordinates >> yaw [
 
 	^ yaw ifNil:[ yaw := 0 ]
 ]
 
 { #category : #accessing }
-MSeven3DCoordinates >> yaw: anObject [
+MSevenCoordinates >> yaw: anObject [
 
 	yaw := anObject
 ]
