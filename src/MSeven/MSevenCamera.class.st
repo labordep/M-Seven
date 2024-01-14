@@ -15,9 +15,9 @@ MSevenCamera >> coordinates [
 ]
 
 { #category : #accessing }
-MSevenCamera >> coordinates: anObject [
+MSevenCamera >> coordinates: aMSevenCoordinates [
 
-	coordinates := anObject
+	coordinates := aMSevenCoordinates
 ]
 
 { #category : #accessing }
@@ -30,4 +30,11 @@ MSevenCamera >> fieldOfView [
 MSevenCamera >> fieldOfView: anObject [
 
 	fieldOfView := anObject
+]
+
+{ #category : #initialization }
+MSevenCamera >> initialize [ 
+
+	super initialize.
+	self coordinates: MSevenCoordinates new.
 ]

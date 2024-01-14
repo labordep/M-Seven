@@ -2,7 +2,7 @@ Class {
 	#name : #MSevenWorld,
 	#superclass : #Object,
 	#instVars : [
-		'ground',
+		'layers',
 		'actors'
 	],
 	#category : #'MSeven-Model'
@@ -20,14 +20,34 @@ MSevenWorld >> actors: anObject [
 	actors := anObject
 ]
 
-{ #category : #accessing }
-MSevenWorld >> ground [
+{ #category : #'accessing - actors' }
+MSevenWorld >> addActor: anActor [
 
-	^ ground
+	self actors add: anActor
+]
+
+{ #category : #'accessing - layers' }
+MSevenWorld >> addLayer: aLayer [
+
+	self layers add: aLayer 
 ]
 
 { #category : #accessing }
-MSevenWorld >> ground: anObject [
+MSevenWorld >> initialize [ 
 
-	ground := anObject
+	super initialize.
+	self actors: OrderedCollection new.
+	self layers: OrderedCollection new.
+]
+
+{ #category : #accessing }
+MSevenWorld >> layers [
+
+	^ layers
+]
+
+{ #category : #accessing }
+MSevenWorld >> layers: anObject [
+
+	layers := anObject
 ]

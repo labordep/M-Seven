@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenWorldGround,
-	#superclass : #MSevenWorldEntity,
+	#name : #MSevenWorldLayer,
+	#superclass : #Object,
 	#instVars : [
 		'texture'
 	],
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #accessing }
-MSevenWorldGround >> texture [
+MSevenWorldLayer >> texture [
 
 	^ texture
 ]
 
 { #category : #accessing }
-MSevenWorldGround >> texture: anObject [
+MSevenWorldLayer >> texture: anObject [
 
 	texture := anObject
 ]

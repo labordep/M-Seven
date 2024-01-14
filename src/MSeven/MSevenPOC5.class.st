@@ -13,6 +13,22 @@ Class {
 }
 
 { #category : #accessing }
+MSevenPOC5 class >> start [
+	<script>
+	
+	self new.
+]
+
+{ #category : #initialization }
+MSevenPOC5 >> addSpaceEventHandlers [
+
+	"Install events listener"
+	space addEventHandler: (BlEventHandler
+			 on: BlSpaceResizedEvent
+			 do: [ :e | self view resolution: self computeViewResolution ])
+]
+
+{ #category : #accessing }
 MSevenPOC5 >> camera [
 
 	^ camera
@@ -45,13 +61,22 @@ MSevenPOC5 >> computeViewResolution [
 ]
 
 { #category : #initialization }
-MSevenPOC5 >> createWorldObjects [
+MSevenPOC5 >> createWorldActors [
 
-	| pharo |
-	pharo := MSevenWorldEntity new.
-	pharo sprite: (self iconNamed: #pharo).
+	| pharoActor |
+	pharoActor := MSevenWorldActor new.
+	pharoActor sprite: (self iconNamed: #pharo).
 	
-	self world actors add: pharo
+	self world addActor: pharoActor
+]
+
+{ #category : #initialization }
+MSevenPOC5 >> createWorldLayers [
+
+	| layer |
+	layer := MSevenWorldLayer new.
+	layer texture: MSevenResources pharoTexture.
+	self world addLayer: layer
 ]
 
 { #category : #initialization }
@@ -66,13 +91,10 @@ MSevenPOC5 >> initialize [
 	self initializeCamera.
 	self initializeView.
 	
-	self createWorldObjects.
+	self createWorldLayers.
+	self createWorldActors.
 	
-	space := self view openInSpace.
-	"Install events listener"
-	space addEventHandler: (BlEventHandler
-			 on: BlSpaceResizedEvent
-			 do: [ :e | self view resolution: self computeViewResolution ])
+	self initializeSpace.
 ]
 
 { #category : #initialization }
@@ -80,21 +102,47 @@ MSevenPOC5 >> initializeCamera [
 	
 	camera := MSevenCamera new.
 	camera fieldOfView: 250.
-	camera coordinates z: 1.0.
+	camera coordinates position x: 0 y: 0 z: 1.0.
+]
+
+{ #category : #initialization }
+MSevenPOC5 >> initializeSpace [
+
+	space := self view openInSpace.
+	space title: 'M-SEVEN Proof Of Concept 5'.
+	
+	self addSpaceEventHandlers.
 ]
 
 { #category : #initialization }
 MSevenPOC5 >> initializeView [
 
+	| transition |
 	view := MSevenWorldCameraViewBlElement new.
 	view camera: self camera.
 	view resolution: self computeViewResolution.
+	view world: self world.
+	
+	"Setup a transition to update the view at each frames"
+	transition := BlNumberTransition new 
+		from: 0; 
+		to: 1; 
+		onStepDo: [ :e | self updateCameraView: view step: e ]; 
+		beInfinite; 
+		yourself.	
+	view enqueueTask: transition.
 ]
 
 { #category : #initialization }
 MSevenPOC5 >> initializeWorld [
 
 	world := MSevenWorld new.
+]
+
+{ #category : #updating }
+MSevenPOC5 >> updateCameraView: aCameraViewElement step: aNumber [
+
+	aCameraViewElement invalidate.
 ]
 
 { #category : #accessing }

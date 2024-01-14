@@ -2,58 +2,78 @@ Class {
 	#name : #MSevenCoordinates,
 	#superclass : #Object,
 	#instVars : [
-		'pitch',
-		'yaw',
-		'roll',
-		'position'
+		'position',
+		'tilt'
 	],
 	#category : #'MSeven-Model'
 }
 
-{ #category : #accessing }
-MSevenCoordinates >> pitch [
+{ #category : #initialization }
+MSevenCoordinates >> initialize [ 
 
-	^ pitch ifNil:[ pitch := 0 ]
+	super initialize.
+	self position: BlPoint3D new.
+	self tilt: BlVector3D zero.
 ]
 
 { #category : #accessing }
-MSevenCoordinates >> pitch: anObject [
+MSevenCoordinates >> pitch [
 
-	pitch := anObject
+	^ self tilt z
+]
+
+{ #category : #accessing }
+MSevenCoordinates >> pitch: anAngle [
+
+	self tilt z: anAngle
 ]
 
 { #category : #accessing }
 MSevenCoordinates >> position [
 
-	^ position ifNil:[ position := BlVector3D zero ]
+	^ position ifNil:[ position := BlPoint3D new ]
 ]
 
 { #category : #accessing }
-MSevenCoordinates >> position: anObject [
+MSevenCoordinates >> position: aBlPoint3D [
 
-	position := anObject
+	position := aBlPoint3D
 ]
 
 { #category : #accessing }
 MSevenCoordinates >> roll [
 
-	^ roll ifNil:[ roll := 0 ]
+	^ self tilt x
 ]
 
 { #category : #accessing }
-MSevenCoordinates >> roll: anObject [
+MSevenCoordinates >> roll: anAngle [
 
-	roll := anObject
+	self tilt x: anAngle
+]
+
+{ #category : #accessing }
+MSevenCoordinates >> tilt [
+
+	^ tilt ifNil:[ tilt := BlVector3D new ]
+]
+
+{ #category : #accessing }
+MSevenCoordinates >> tilt: aBlVector3D [
+
+	tilt := aBlVector3D
 ]
 
 { #category : #accessing }
 MSevenCoordinates >> yaw [
 
-	^ yaw ifNil:[ yaw := 0 ]
+	^ self tilt y
 ]
 
 { #category : #accessing }
-MSevenCoordinates >> yaw: anObject [
+MSevenCoordinates >> yaw: anAngle [
 
-	yaw := anObject
+	self tilt y: anAngle
+
+
 ]

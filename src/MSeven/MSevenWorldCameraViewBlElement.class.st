@@ -2,12 +2,12 @@ Class {
 	#name : #MSevenWorldCameraViewBlElement,
 	#superclass : #BlElement,
 	#instVars : [
+		'world',
 		'camera',
 		'resolution',
-		'world',
-		'environmentSurface',
 		'scaleFactor',
-		'environmentSurfacePattern'
+		'layersSurfacePattern',
+		'layersSurface'
 	],
 	#category : #'MSeven-View'
 }
@@ -16,18 +16,23 @@ Class {
 MSevenWorldCameraViewBlElement >> aeDrawGeometryOn: aeCanvas [
 	"Ignore geometry and other visual properties and directly show a fresh camera surface."
 	
-	environmentSurfacePattern ifNil:[ ^ self ].
+	layersSurfacePattern ifNil:[ ^ self ].
+	self camera ifNil:[ ^ self ].
+	self world ifNil:[ ^ self ].
+	self resolution ifNil:[ ^ self ].
 	
-	"draw environment surface"
-	self updateEnvironmentSurface.
-	
-	self aeDrawWorldEnvironmentOn: aeCanvas.
+	"draw layers"
+	self updateLayersSurface.
+	self aeDrawLayersOn: aeCanvas.
 ]
 
 { #category : #drawing }
-MSevenWorldCameraViewBlElement >> aeDrawWorldEnvironmentOn: aeCanvas [
+MSevenWorldCameraViewBlElement >> aeDrawLayersOn: aeCanvas [
 	
-	aeCanvas privateAeCairoContext source: environmentSurfacePattern; rectangleTo: self size; fill
+	aeCanvas privateAeCairoContext 
+		source: layersSurfacePattern; 
+		rectangleTo: self size; 
+		fill
 ]
 
 { #category : #accessing }
@@ -42,34 +47,34 @@ MSevenWorldCameraViewBlElement >> camera: anObject [
 	camera := anObject
 ]
 
-{ #category : #accessing }
-MSevenWorldCameraViewBlElement >> environmentSurface [
-
-	^ environmentSurface
-]
-
-{ #category : #accessing }
-MSevenWorldCameraViewBlElement >> environmentSurface: anObject [
-
-	environmentSurface := anObject
-]
-
 { #category : #initialization }
 MSevenWorldCameraViewBlElement >> initialize [
 
 	super initialize.
-	self initializeEnvironmentSurface.
+	self initializeLayersSurface.
 	
 ]
 
 { #category : #initialization }
-MSevenWorldCameraViewBlElement >> initializeEnvironmentSurface [
+MSevenWorldCameraViewBlElement >> initializeLayersSurface [
 
 	self resolution ifNil:[ ^ self ].
+	
+	layersSurface := AeCairoImageSurface extent: self resolution format: AeCairoSurfaceFormat argb32.
+	layersSurfacePattern := AeCairoSurfacePattern surface: layersSurface.
+	layersSurfacePattern filter: AeCairoSamplingFilter nearest.
+]
 
-	environmentSurface := AeCairoImageSurface extent: self resolution format: AeCairoSurfaceFormat argb32.
-	environmentSurfacePattern := AeCairoSurfacePattern surface: environmentSurface.
-	environmentSurfacePattern filter: AeCairoSamplingFilter nearest.
+{ #category : #accessing }
+MSevenWorldCameraViewBlElement >> layersSurface [
+
+	^ layersSurface
+]
+
+{ #category : #accessing }
+MSevenWorldCameraViewBlElement >> layersSurface: anObject [
+
+	layersSurface := anObject
 ]
 
 { #category : #initialization }
@@ -89,7 +94,7 @@ MSevenWorldCameraViewBlElement >> resolution: anObject [
 
 	resolution = anObject ifTrue:[ ^ self ].
 	resolution := anObject.
-	self initializeEnvironmentSurface.
+	self initializeLayersSurface.
 ]
 
 { #category : #accessing }
@@ -106,7 +111,7 @@ MSevenWorldCameraViewBlElement >> scaleFactor: aFloat [
 	self updatePattern.
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 MSevenWorldCameraViewBlElement >> size: aPoint [
 
 	| newScale |
@@ -120,22 +125,73 @@ MSevenWorldCameraViewBlElement >> size: aPoint [
 	self scaleFactor: newScale.
 ]
 
-{ #category : #update }
-MSevenWorldCameraViewBlElement >> updateEnvironmentSurface [
+{ #category : #updating }
+MSevenWorldCameraViewBlElement >> updateLayersSurface [
 
+	| width height halfWidth halfHeight sin cos beginHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent |
+	width := self resolution x.
+	height := self resolution y.
+	halfWidth := (self resolution x / 2) asInteger.
+	halfHeight := (self resolution y / 2) asInteger.
+	sin := self camera coordinates pitch sin.
+	cos := self camera coordinates pitch cos.
+	beginHeight := height * 0.2.
+	altitude := self camera coordinates position z.
+	bufferAddress := layersSurface data.
+	horizontalLineByteLength := layersSurface stride.
+	scale := 100.
 	
+	"only one layer for this POC"
+	layer := self world layers first. 
+	layerExtent := layer texture extent.
+	
+	"iterating over the screen array"
+	1 to: width do: [ :i |
+		beginHeight ceiling to: height do: [ :j |
+			| x y z px py rx ry floorPos floorColor attenuation |
+			"x y z"
+			x := halfWidth - i.
+			y := j + self camera fieldOfView.
+			z := j - beginHeight + altitude.
+			
+			"rotation"
+			rx := (x * cos) - (y * sin).
+			ry := (x * sin) + (y * cos).
+			
+			"projection"
+			px := rx / z + (self camera coordinates position y) * scale.
+			py := ry / z + (self camera coordinates position x negated) * scale.
+			
+			"floor pixel pos and color"
+			floorPos := Point
+				x: ((px \\ (layerExtent x)) asInteger)
+				y: ((py \\ (layerExtent y)) asInteger). 
+			floorColor := layer texture colorAt: floorPos.
+			
+			"shading & fog"
+			attenuation := (10 * ((z abs) / halfHeight)) max: 0; min: 1.
+			floorColor := floorColor adjustBrightness: ((1 - (attenuation))).
+			
+			"fill a pixel"
+			bufferAddress
+				uint32AtOffset: ((j - 1) * horizontalLineByteLength) + ((i - 1) << 2)
+				put: floorColor asPremultipliedARGB32Integer.
+		]. 
+	].
+
+	layersSurface markDirty
 ]
 
-{ #category : #initialization }
+{ #category : #updating }
 MSevenWorldCameraViewBlElement >> updatePattern [
 	
-	environmentSurfacePattern ifNil:[ ^ self ].
+	layersSurfacePattern ifNil:[ ^ self ].
 	self scaleFactor ifNil:[ ^ self ].
 
 	"By default, patterns have the identity matrix.
 	Then, we will only change it if really needed."
 	(scaleFactor closeTo: 1.0) ifFalse: [
-		environmentSurfacePattern matrix: (AeCairoMatrix	newScalingByX: (1.0 / self scaleFactor) y: (1.0 / self scaleFactor))
+		layersSurfacePattern matrix: (AeCairoMatrix	newScalingByX: (1.0 / self scaleFactor) y: (1.0 / self scaleFactor))
 	]
 ]
 

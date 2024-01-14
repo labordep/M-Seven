@@ -20,6 +20,13 @@ MSevenWorldActor >> coordinates: anObject [
 	coordinates := anObject
 ]
 
+{ #category : #initialization }
+MSevenWorldActor >> initialize [ 
+
+	super initialize.
+	self coordinates: MSevenCoordinates new.
+]
+
 { #category : #accessing }
 MSevenWorldActor >> sprite [
 

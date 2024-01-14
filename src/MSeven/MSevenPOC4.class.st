@@ -275,31 +275,39 @@ MSevenPOC4 >> initialize [
 
 	super initialize.
 	self computeWorldResolution.
-	
+
 	worldTexture := MSevenResources pharoTexture.
-	cameraPosition := 0@0.
+	cameraPosition := 0 @ 0.
 	cameraAltitude := 1.0.
 	cameraAngle := 0.
 	cameraSpeed := 0.1.
-	
+
 	isArrowUpPressed := false.
 	isArrowDownPressed := false.
 	isLeftPressed := false.
-	isRightPressed := false. 
+	isRightPressed := false.
 	isAltitudeDownPressed := false.
 	isAltitudeUpPressed := false.
 	isArrowLeftPressed := false.
 	isArrowRightPressed := false.
-	
-	self initializeView. 
+
+	self initializeView.
 	self startSurfaceElementUpdate.
-	
-	space := view openInNewSpaceWithPyramidShortcut.
-	
+
+	space := view openInNewSpace.
+
 	"Install events listener"
-	space when: BlKeyDownEvent do:[ :e | self processKeyDownEvent: e ].
-	space when: BlKeyUpEvent do:[ :e | self processKeyUpEvent: e ]. 
-	space when: BlSpaceResizedEvent do:[ :e | self computeWorldResolution. self updateSurfaceElementUpdate ].
+	space addEventHandler: (BlEventHandler
+			 on: BlKeyDownEvent
+			 do: [ :e | self processKeyDownEvent: e ]).
+	space addEventHandler: (BlEventHandler
+			 on: BlKeyUpEvent
+			 do: [ :e | self processKeyUpEvent: e ]).
+	space addEventHandler: (BlEventHandler
+			 on: BlSpaceResizedEvent
+			 do: [ :e |
+				 self computeWorldResolution.
+				 self updateSurfaceElementUpdate ])
 ]
 
 { #category : #ui }
@@ -307,10 +315,8 @@ MSevenPOC4 >> initializeToploUI [
 
 	"Set UI Theme"
 	| fullScreenButton |
-	view toTheme: ToBeeDarkTheme new.
-	
 	fullScreenButton := (ToButton id: #fullscreenButton) labelText: 'Fullscreen'; position: 300@10.
-	fullScreenButton withStamp: #primary.
+	fullScreenButton addStamp: #primary.
 	fullScreenButton whenClickedDo: [ self toggleFullscreen ].	
 	view addChild: fullScreenButton.
 ]
