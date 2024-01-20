@@ -3,13 +3,14 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'camera',
+		'cameraSpeed',
 		'view',
 		'world',
 		'defaultViewResolution',
 		'defaultWindowSize',
 		'space'
 	],
-	#category : #'MSeven-POCv2'
+	#category : #'MSeven-POCwithModel'
 }
 
 { #category : #accessing }
@@ -19,7 +20,7 @@ MSevenPOC5 class >> start [
 	self new.
 ]
 
-{ #category : #initialization }
+{ #category : #events }
 MSevenPOC5 >> addSpaceEventHandlers [
 
 	"Install events listener"
@@ -32,6 +33,18 @@ MSevenPOC5 >> addSpaceEventHandlers [
 MSevenPOC5 >> camera [
 
 	^ camera
+]
+
+{ #category : #accessing }
+MSevenPOC5 >> cameraSpeed [
+
+	^ cameraSpeed ifNil: [ cameraSpeed := 0.5 ]
+]
+
+{ #category : #accessing }
+MSevenPOC5 >> cameraSpeed: anObject [
+
+	cameraSpeed := anObject
 ]
 
 { #category : #computing }
@@ -95,6 +108,7 @@ MSevenPOC5 >> initialize [
 	self createWorldActors.
 	
 	self initializeSpace.
+	self installSpaceHandlers.
 ]
 
 { #category : #initialization }
@@ -102,11 +116,15 @@ MSevenPOC5 >> initializeCamera [
 	
 	camera := MSevenCamera new.
 	camera fieldOfView: 250.
-	camera coordinates position x: 0 y: 0 z: 1.0.
+	camera pose position x: 0 y: 0 z: 1.0.
 ]
 
 { #category : #initialization }
 MSevenPOC5 >> initializeSpace [
+
+	self view constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
 
 	space := self view openInSpace.
 	space title: 'M-SEVEN Proof Of Concept 5'.
@@ -123,10 +141,6 @@ MSevenPOC5 >> initializeView [
 	view resolution: self computeViewResolution.
 	view world: self world.
 	
-	view constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-	
 	"Setup a transition to update the view at each frames"
 	transition := BlNumberTransition new 
 		from: 0; 
@@ -134,6 +148,7 @@ MSevenPOC5 >> initializeView [
 		onStepDo: [ :e | self updateCameraView: view step: e ]; 
 		beInfinite; 
 		yourself.	
+			
 	view enqueueTask: transition.
 ]
 
@@ -141,6 +156,95 @@ MSevenPOC5 >> initializeView [
 MSevenPOC5 >> initializeWorld [
 
 	world := MSevenWorld new.
+]
+
+{ #category : #events }
+MSevenPOC5 >> installSpaceHandlers [
+
+	space addEventHandler: (BlEventHandler
+			 on: BlKeyDownEvent
+			 do: [ :e | self receiveKeyDownEvent: e ]).
+	space addEventHandler: (BlEventHandler
+			 on: BlKeyUpEvent
+			 do: [ :e | self receiveKeyUpEvent: e ])
+]
+
+{ #category : #'private - events' }
+MSevenPOC5 >> moveBackwardCamera [
+
+	| newPose |
+	newPose := MSevenPoseUtils
+		                  moveBackwardPose: self camera pose
+		                  speed: self cameraSpeed.
+	
+	self camera pose: newPose
+]
+
+{ #category : #'private - events' }
+MSevenPOC5 >> moveForwardCamera [
+
+	| newPose |
+	newPose := MSevenPoseUtils
+		                  moveForwardPose: self camera pose
+		                  speed: self cameraSpeed.
+		
+	self camera pose: newPose
+]
+
+{ #category : #events }
+MSevenPOC5 >> receiveKeyDownEvent: anEvent [
+	"Set the key down actions to move the camera"
+
+	"LTBR Arrow or ZQSD/WASD for azerty/qwerty keyboard"
+
+	(anEvent key isArrowUp or: [
+		 anEvent key = KeyboardKey Z or: [ anEvent key = KeyboardKey W ] ])
+		ifTrue: [
+			self moveForwardCamera.
+			^ self ].
+
+	(anEvent key isArrowDown or: [ anEvent key = KeyboardKey S ])
+		ifTrue: [
+			self moveBackwardCamera.
+			^ self ].
+		
+	(anEvent key isArrowLeft or: [
+		 anEvent key = KeyboardKey Q or: [ anEvent key = KeyboardKey A ] ]) ifTrue:[
+		self turnLeftCamera.
+		^self	
+	].
+
+	(anEvent key isArrowRight or: [
+		 anEvent key = KeyboardKey D ]) ifTrue:[
+		self turnRightCamera.
+		^self	
+	].
+]
+
+{ #category : #events }
+MSevenPOC5 >> receiveKeyUpEvent: anEvent [
+]
+
+{ #category : #'private - events' }
+MSevenPOC5 >> turnLeftCamera [
+
+	| newPose |
+	newPose := MSevenPoseUtils
+		                  turnLeftPose: self camera pose
+		                  angle: 5 degreesToRadians.
+		
+	self camera pose: newPose 
+]
+
+{ #category : #'private - events' }
+MSevenPOC5 >> turnRightCamera [
+
+	| newPose |
+	newPose := MSevenPoseUtils
+		                  turnRightPose: self camera pose
+		                  angle: 5 degreesToRadians. 
+		
+	self camera pose: newPose
 ]
 
 { #category : #updating }

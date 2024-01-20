@@ -2,29 +2,22 @@ Class {
 	#name : #MSevenWorldActor,
 	#superclass : #MSevenWorldEntity,
 	#instVars : [
-		'coordinates',
+		'pose',
 		'sprite'
 	],
 	#category : #'MSeven-Model'
 }
 
 { #category : #accessing }
-MSevenWorldActor >> coordinates [
+MSevenWorldActor >> pose [
 
-	^ coordinates ifNil:[ coordinates := MSevenCoordinates new ]
+	^ pose ifNil:[ pose := MSevenPose new ]
 ]
 
 { #category : #accessing }
-MSevenWorldActor >> coordinates: anObject [
+MSevenWorldActor >> pose: anObject [
 
-	coordinates := anObject
-]
-
-{ #category : #initialization }
-MSevenWorldActor >> initialize [ 
-
-	super initialize.
-	self coordinates: MSevenCoordinates new.
+	pose := anObject
 ]
 
 { #category : #accessing }

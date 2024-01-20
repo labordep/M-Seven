@@ -2,23 +2,11 @@ Class {
 	#name : #MSevenCamera,
 	#superclass : #Object,
 	#instVars : [
-		'coordinates',
-		'fieldOfView'
+		'fieldOfView',
+		'pose'
 	],
 	#category : #'MSeven-Model'
 }
-
-{ #category : #accessing }
-MSevenCamera >> coordinates [
-
-	^ coordinates ifNil:[ coordinates := MSevenCoordinates new ]
-]
-
-{ #category : #accessing }
-MSevenCamera >> coordinates: aMSevenCoordinates [
-
-	coordinates := aMSevenCoordinates
-]
 
 { #category : #accessing }
 MSevenCamera >> fieldOfView [
@@ -32,9 +20,14 @@ MSevenCamera >> fieldOfView: anObject [
 	fieldOfView := anObject
 ]
 
-{ #category : #initialization }
-MSevenCamera >> initialize [ 
+{ #category : #accessing }
+MSevenCamera >> pose [
 
-	super initialize.
-	self coordinates: MSevenCoordinates new.
+	^ pose ifNil:[ pose := MSevenPose new ]
+]
+
+{ #category : #accessing }
+MSevenCamera >> pose: aMSevenPose [
+
+	pose := aMSevenPose
 ]

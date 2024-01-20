@@ -71,7 +71,7 @@ MSevenWorldCameraViewBlElement >> camera: anObject [
 MSevenWorldCameraViewBlElement >> initialize [
 
 	super initialize.
-	self installListeners.
+	self installHandlers.
 ]
 
 { #category : #initialization }
@@ -88,7 +88,7 @@ MSevenWorldCameraViewBlElement >> initializeLayersSurface [
 ]
 
 { #category : #initialization }
-MSevenWorldCameraViewBlElement >> installListeners [
+MSevenWorldCameraViewBlElement >> installHandlers [
 
 	self addEventHandler: (BlEventHandler
 			 on: BlElementLayoutComputedEvent
@@ -147,12 +147,12 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 	
 	width := res x.
 	height := res y.
-	halfWidth := (res x / 2) asInteger.
-	halfHeight := (res y / 2) asInteger.
-	sin := self camera coordinates pitch sin.
-	cos := self camera coordinates pitch cos.
+	halfWidth := (res x / 2) rounded.
+	halfHeight := (res y / 2) rounded.
+	sin := self camera pose yaw sin.
+	cos := self camera pose yaw cos.
 	beginHeight := height * 0.2.
-	altitude := self camera coordinates position z.
+	altitude := self camera pose position z.
 	bufferAddress := layersSurface data.
 	horizontalLineByteLength := layersSurface stride.
 	scale := 100.
@@ -170,18 +170,18 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 			y := j + self camera fieldOfView.
 			z := j - beginHeight + altitude.
 			
-			"rotation"
+			"yaw processing"
 			rx := (x * cos) - (y * sin).
 			ry := (x * sin) + (y * cos).
 			
 			"projection"
-			px := rx / z + (self camera coordinates position y) * scale.
-			py := ry / z + (self camera coordinates position x negated) * scale.
+			px := rx / z + (self camera pose position y) * scale.
+			py := ry / z + (self camera pose position x negated) * scale.
 			
 			"floor pixel pos and color"
 			floorPos := Point
-				x: ((px \\ (layerExtent x)) asInteger)
-				y: ((py \\ (layerExtent y)) asInteger). 
+				x: ((px \\ (layerExtent x)) rounded)
+				y: (layerExtent y - ((py \\ layerExtent y) rounded) - 1).
 			floorColor := layer texture colorAt: floorPos.
 			
 			"shading & fog"
