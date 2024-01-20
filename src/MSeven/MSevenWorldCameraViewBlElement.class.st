@@ -9,7 +9,8 @@ Class {
 		'layersSurfacePattern',
 		'layersSurface',
 		'stepResolution',
-		'stepScaleFactor'
+		'stepScaleFactor',
+		'horizonProportion'
 	],
 	#category : #'MSeven-View'
 }
@@ -67,6 +68,19 @@ MSevenWorldCameraViewBlElement >> camera: anObject [
 	camera := anObject
 ]
 
+{ #category : #accessing }
+MSevenWorldCameraViewBlElement >> horizonProportion [
+	"return the place of the horizon in % of the resolution height"
+
+	^ horizonProportion ifNil:[ horizonProportion := 0.2 ]
+]
+
+{ #category : #accessing }
+MSevenWorldCameraViewBlElement >> horizonProportion: anObject [
+
+	horizonProportion := anObject
+]
+
 { #category : #initialization }
 MSevenWorldCameraViewBlElement >> initialize [
 
@@ -113,6 +127,14 @@ MSevenWorldCameraViewBlElement >> prepareWorld [
 	
 ]
 
+{ #category : #projection }
+MSevenWorldCameraViewBlElement >> project2DIsometricPointX: x y: y [
+
+	| sin cos |
+	sin := self camera pose yaw sin.
+	cos := self camera pose yaw cos.
+]
+
 { #category : #accessing }
 MSevenWorldCameraViewBlElement >> resolution [
 
@@ -141,48 +163,50 @@ MSevenWorldCameraViewBlElement >> scaleFactor: aFloat [
 { #category : #updating }
 MSevenWorldCameraViewBlElement >> updateLayersSurface [
 
-	| width height halfWidth halfHeight sin cos beginHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent res |
+	| width height halfWidth halfHeight sin cos horizonHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent res cameraY cameraXNegated |
 	
 	res := stepResolution ifNil:[ ^ self ].
 	
 	width := res x.
 	height := res y.
-	halfWidth := (res x / 2) rounded.
-	halfHeight := (res y / 2) rounded.
+	halfWidth := (res x / 2) asInteger.
+	halfHeight := (res y / 2) asInteger.
 	sin := self camera pose yaw sin.
 	cos := self camera pose yaw cos.
-	beginHeight := height * 0.2.
-	altitude := self camera pose position z.
+	horizonHeight := (height * self horizonProportion) ceiling.
+	altitude := self camera pose z.
+	cameraY := self camera pose y.
+	cameraXNegated := self camera pose x negated.
 	bufferAddress := layersSurface data.
 	horizontalLineByteLength := layersSurface stride.
-	scale := 100.
-	
+		
 	"only one layer for this POC"
 	layer := self world layers first. 
-	layerExtent := layer texture extent.
+	scale := layer scale.
+	layerExtent := layer sprite extent ifNil:[ ^ self ].
 	
 	"iterating over the screen array"
 	1 to: width do: [ :i |
-		beginHeight ceiling to: height do: [ :j |
+		horizonHeight to: height do: [ :j |
 			| x y z px py rx ry floorPos floorColor attenuation |
 			"x y z"
 			x := halfWidth - i.
 			y := j + self camera fieldOfView.
-			z := j - beginHeight + altitude.
+			z := j - horizonHeight + altitude.
 			
 			"yaw processing"
 			rx := (x * cos) - (y * sin).
 			ry := (x * sin) + (y * cos).
 			
 			"projection"
-			px := rx / z + (self camera pose position y) * scale.
-			py := ry / z + (self camera pose position x negated) * scale.
+			px := rx / z + cameraY * scale.
+			py := ry / z + cameraXNegated * scale.
 			
 			"floor pixel pos and color"
 			floorPos := Point
-				x: ((px \\ (layerExtent x)) rounded)
-				y: (layerExtent y - ((py \\ layerExtent y) rounded) - 1).
-			floorColor := layer texture colorAt: floorPos.
+				x: ((px \\ (layerExtent x)) asInteger)
+				y: (layerExtent y - ((py \\ layerExtent y) asInteger) - 1).
+			floorColor := layer sprite textureToDiplay colorAt: floorPos.
 			
 			"shading & fog"
 			attenuation := (10 * ((z abs) / halfHeight)) max: 0; min: 1.

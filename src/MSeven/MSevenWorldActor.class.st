@@ -27,7 +27,7 @@ MSevenWorldActor >> sprite [
 ]
 
 { #category : #accessing }
-MSevenWorldActor >> sprite: anObject [
+MSevenWorldActor >> sprite: aSprite [
 
-	sprite := anObject
+	sprite := aSprite
 ]

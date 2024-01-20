@@ -276,7 +276,7 @@ MSevenPOC4 >> initialize [
 	super initialize.
 	self computeWorldResolution.
 
-	worldTexture := MSevenResources pharoTexture.
+	worldTexture := MSevenResources ground_pharo_step3.
 	cameraPosition := 0 @ 0.
 	cameraAltitude := 1.0.
 	cameraAngle := 0.

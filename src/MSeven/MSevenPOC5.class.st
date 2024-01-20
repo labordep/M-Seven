@@ -86,9 +86,16 @@ MSevenPOC5 >> createWorldActors [
 { #category : #initialization }
 MSevenPOC5 >> createWorldLayers [
 
-	| layer |
+	| layer sprite |
+	sprite := MSevenAnimatedSprite new.
+	sprite addTexture: MSevenResources ground_pharo_step1.
+	sprite addTexture: MSevenResources ground_pharo_step2.
+	sprite addTexture: MSevenResources ground_pharo_step3.
+	
 	layer := MSevenWorldLayer new.
-	layer texture: MSevenResources pharoTexture.
+	layer name: 'Ground'.
+	layer sprite: sprite.
+	layer scale: 50.
 	self world addLayer: layer
 ]
 

@@ -109,7 +109,7 @@ MSevenPOC3 >> initialize [
 	viewResolution := 256 @ 240.
 	view := self class view materializeAsBlElement first.
 	view
-		map: MSevenResources checkerboardTexture
+		map: MSevenResources ground_checkerboard
 		cameraResolution: viewResolution.
 
 	space := view openInNewSpace.

@@ -119,7 +119,7 @@ MSevenPOC1 >> initialize [
 	screenResolution := 256@240. 
 	view := self class testView materializeAsBlElement first.
 	
-	self loadTexture: MSevenResources checkerboardTexture in: view.
+	self loadTexture: MSevenResources ground_checkerboard in: view.
 		
 	space := view openInSpace.
 	space when: BlSpaceResizedEvent do:[

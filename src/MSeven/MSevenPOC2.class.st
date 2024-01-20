@@ -110,7 +110,7 @@ MSevenPOC2 >> initialize [
 	view := self class view materializeAsBlElement first.
 		
 	space := view openInSpace.
-	self initializeMap: MSevenResources checkerboardTexture.
+	self initializeMap: MSevenResources ground_checkerboard.
 	
 	view surface: viewSurface.
 	
