@@ -7,23 +7,43 @@ Class {
 		'resolution',
 		'scaleFactor',
 		'layersSurfacePattern',
-		'layersSurface'
+		'layersSurface',
+		'stepResolution',
+		'stepScaleFactor'
 	],
 	#category : #'MSeven-View'
 }
 
 { #category : #drawing }
 MSevenWorldCameraViewBlElement >> aeDrawGeometryOn: aeCanvas [
-	"Ignore geometry and other visual properties and directly show a fresh camera surface."
+	"Draw directly to show a fresh camera surface."
 	
-	layersSurfacePattern ifNil:[ ^ self ].
+	self aeDrawLayersOn: aeCanvas.
+]
+
+{ #category : #drawing }
+MSevenWorldCameraViewBlElement >> aeDrawIgnoringOpacityAndTransformationOn: aeCanvas [
+	
+	"compute dirty values if needed"
+	stepResolution ~= self resolution ifTrue:[
+		stepResolution := self resolution.	
+		self initializeLayersSurface.
+	].
+	
+	stepScaleFactor ~= self scaleFactor ifTrue:[
+		stepScaleFactor := self scaleFactor.
+		self updatePattern.	
+	].
+	
+	stepResolution ifNil:[ ^ self ].
+	stepScaleFactor ifNil:[ ^ self ].
 	self camera ifNil:[ ^ self ].
 	self world ifNil:[ ^ self ].
-	self resolution ifNil:[ ^ self ].
-	
-	"draw layers"
+		
+	"compute drawed layer"
 	self updateLayersSurface.
-	self aeDrawLayersOn: aeCanvas.
+	
+	super aeDrawIgnoringOpacityAndTransformationOn: aeCanvas
 ]
 
 { #category : #drawing }
@@ -51,18 +71,28 @@ MSevenWorldCameraViewBlElement >> camera: anObject [
 MSevenWorldCameraViewBlElement >> initialize [
 
 	super initialize.
-	self initializeLayersSurface.
-	
+	self installListeners.
 ]
 
 { #category : #initialization }
 MSevenWorldCameraViewBlElement >> initializeLayersSurface [
 
-	self resolution ifNil:[ ^ self ].
+	| extent |
+	extent := stepResolution ifNil:[ ^ self ].
 	
-	layersSurface := AeCairoImageSurface extent: self resolution format: AeCairoSurfaceFormat argb32.
+	layersSurface := AeCairoImageSurface extent: extent format: AeCairoSurfaceFormat argb32.
 	layersSurfacePattern := AeCairoSurfacePattern surface: layersSurface.
 	layersSurfacePattern filter: AeCairoSamplingFilter nearest.
+	
+	self updatePattern.
+]
+
+{ #category : #initialization }
+MSevenWorldCameraViewBlElement >> installListeners [
+
+	self addEventHandler: (BlEventHandler
+			 on: BlElementLayoutComputedEvent
+			 do: [ self updateScale ])
 ]
 
 { #category : #accessing }
@@ -92,9 +122,8 @@ MSevenWorldCameraViewBlElement >> resolution [
 { #category : #accessing }
 MSevenWorldCameraViewBlElement >> resolution: anObject [
 
-	resolution = anObject ifTrue:[ ^ self ].
 	resolution := anObject.
-	self initializeLayersSurface.
+	
 ]
 
 { #category : #accessing }
@@ -106,33 +135,20 @@ MSevenWorldCameraViewBlElement >> scaleFactor [
 { #category : #accessing }
 MSevenWorldCameraViewBlElement >> scaleFactor: aFloat [
 
-	scaleFactor = aFloat ifTrue:[ ^ self ].
-	scaleFactor := aFloat.
-	self updatePattern.
-]
-
-{ #category : #accessing }
-MSevenWorldCameraViewBlElement >> size: aPoint [
-
-	| newScale |
-	super size: aPoint.
-	
-	self resolution ifNil:[ ^ self ].
-	
-	"update scale factor"
-	newScale := (self size / self resolution).
-	newScale := (newScale x < newScale y ifTrue:[ newScale x ] ifFalse:[ newScale y ]).
-	self scaleFactor: newScale.
+	scaleFactor := aFloat
 ]
 
 { #category : #updating }
 MSevenWorldCameraViewBlElement >> updateLayersSurface [
 
-	| width height halfWidth halfHeight sin cos beginHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent |
-	width := self resolution x.
-	height := self resolution y.
-	halfWidth := (self resolution x / 2) asInteger.
-	halfHeight := (self resolution y / 2) asInteger.
+	| width height halfWidth halfHeight sin cos beginHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent res |
+	
+	res := stepResolution ifNil:[ ^ self ].
+	
+	width := res x.
+	height := res y.
+	halfWidth := (res x / 2) asInteger.
+	halfHeight := (res y / 2) asInteger.
 	sin := self camera coordinates pitch sin.
 	cos := self camera coordinates pitch cos.
 	beginHeight := height * 0.2.
@@ -185,14 +201,26 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 { #category : #updating }
 MSevenWorldCameraViewBlElement >> updatePattern [
 	
+	stepScaleFactor ifNil:[ ^ self ].
 	layersSurfacePattern ifNil:[ ^ self ].
-	self scaleFactor ifNil:[ ^ self ].
 
 	"By default, patterns have the identity matrix.
 	Then, we will only change it if really needed."
-	(scaleFactor closeTo: 1.0) ifFalse: [
-		layersSurfacePattern matrix: (AeCairoMatrix	newScalingByX: (1.0 / self scaleFactor) y: (1.0 / self scaleFactor))
+	(stepScaleFactor closeTo: 1.0) ifFalse: [
+		layersSurfacePattern matrix: (AeCairoMatrix	newScalingByX: (stepScaleFactor) y: (stepScaleFactor))
 	]
+]
+
+{ #category : #accessing }
+MSevenWorldCameraViewBlElement >> updateScale [
+
+	| newScale |
+	self resolution ifNil: [ ^ self ].
+
+	"update scale factor"
+	newScale := self resolution / self size.
+	newScale := newScale x min: newScale y.
+	self scaleFactor: newScale
 ]
 
 { #category : #accessing }

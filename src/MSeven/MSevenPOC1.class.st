@@ -121,7 +121,7 @@ MSevenPOC1 >> initialize [
 	
 	self loadTexture: MSevenResources checkerboardTexture in: view.
 		
-	space := view openInNewSpaceWithPyramidShortcut.
+	space := view openInSpace.
 	space when: BlSpaceResizedEvent do:[
 		screen scaledToSize: space extent
 	].

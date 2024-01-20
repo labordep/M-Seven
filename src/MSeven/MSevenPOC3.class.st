@@ -112,7 +112,7 @@ MSevenPOC3 >> initialize [
 		map: MSevenResources checkerboardTexture
 		cameraResolution: viewResolution.
 
-	space := view openInNewSpaceWithPyramidShortcut.
+	space := view openInNewSpace.
 	space extent: viewResolution.
 
 	position := 0@0.

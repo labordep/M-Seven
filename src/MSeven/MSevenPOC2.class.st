@@ -109,7 +109,7 @@ MSevenPOC2 >> initialize [
 	viewResolution := 256@240.
 	view := self class view materializeAsBlElement first.
 		
-	space := view openInNewSpaceWithPyramidShortcut.
+	space := view openInSpace.
 	self initializeMap: MSevenResources checkerboardTexture.
 	
 	view surface: viewSurface.

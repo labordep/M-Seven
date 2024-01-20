@@ -110,8 +110,8 @@ MSevenPOC5 >> initializeSpace [
 
 	space := self view openInSpace.
 	space title: 'M-SEVEN Proof Of Concept 5'.
-	
 	self addSpaceEventHandlers.
+
 ]
 
 { #category : #initialization }
@@ -122,6 +122,10 @@ MSevenPOC5 >> initializeView [
 	view camera: self camera.
 	view resolution: self computeViewResolution.
 	view world: self world.
+	
+	view constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
 	
 	"Setup a transition to update the view at each frames"
 	transition := BlNumberTransition new 
