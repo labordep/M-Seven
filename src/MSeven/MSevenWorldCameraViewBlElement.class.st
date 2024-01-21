@@ -115,8 +115,6 @@ MSevenWorldCameraViewBlElement >> aeDrawSkyLayersOn: aeCanvas [
 	rectangle := (layerExtent x @ (horizonHeight / scaleFactor)).
 	x := ((rectangle x) * (yaw negated / 2)).
 	y := 0.
-	
-	Transcript show: x; cr.
 
 	aeCanvas restoreContextAfter: [
 		aeCanvas pathTranslate: x@y.

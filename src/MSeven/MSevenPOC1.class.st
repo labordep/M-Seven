@@ -112,35 +112,37 @@ MSevenPOC1 class >> testView [
 ]
 
 { #category : #initialization }
-MSevenPOC1 >> initialize [ 
-	
+MSevenPOC1 >> initialize [
+
 	super initialize.
-	
-	screenResolution := 256@240. 
+
+	screenResolution := 256 @ 240.
 	view := self class testView materializeAsBlElement first.
-	
+
 	self loadTexture: MSevenResources ground_checkerboard in: view.
-		
+
 	space := view openInSpace.
-	space when: BlSpaceResizedEvent do:[
-		screen scaledToSize: space extent
-	].
-	
-	cameraMove := [ | position |
-	
-		position := 0@0.
-		[space isOpened] whileTrue:[ | angle time |
-			position ifNil:[position := 0@0].
-			time := [position := position + (0.01@0).
-			angle := (position x * 0.3) sin.
-			self moveCameraToPosition: position angle: angle] timeToRun asMilliSeconds.
-			((16 - time) max: 1) milliSeconds wait.
-			view background: (BlImageBackground image: screen copy).
-		].
-	
-	] forkAt: Processor userBackgroundPriority named: 'M-SevenPOC1'. 
-	
-	
+	space addEventHandler: (BlEventHandler
+			 on: BlSpaceResizedEvent
+			 do: [ screen scaledToSize: space extent ]).
+
+	cameraMove := [
+	              | position |
+	              position := 0 @ 0.
+	              [ space isOpened ] whileTrue: [
+		              | angle time |
+		              position ifNil: [ position := 0 @ 0 ].
+		              time := [
+		                      position := position + (0.01 @ 0).
+		                      angle := (position x * 0.3) sin.
+		                      self
+			                      moveCameraToPosition: position
+			                      angle: angle ] timeToRun asMilliSeconds.
+		              (16 - time max: 1) milliSeconds wait.
+		              view background:
+			              (BlImageBackground image: screen copy) ] ]
+		              forkAt: Processor userBackgroundPriority
+		              named: 'M-SevenPOC1'
 ]
 
 { #category : #texture }
