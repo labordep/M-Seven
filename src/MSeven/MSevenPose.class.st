@@ -85,7 +85,7 @@ MSevenPose >> x [
 { #category : #accessing }
 MSevenPose >> x: aFloat [
 
-	self position x: aFloat
+	self position: (BlPoint3D x: aFloat y: self position y z: self position z)
 ]
 
 { #category : #accessing }
@@ -97,7 +97,7 @@ MSevenPose >> y [
 { #category : #accessing }
 MSevenPose >> y: aFloat [
 
-	self position y: aFloat
+	self position: (BlPoint3D x: self position x y: aFloat z: self position z)
 ]
 
 { #category : #accessing }
@@ -122,5 +122,5 @@ MSevenPose >> z [
 { #category : #accessing }
 MSevenPose >> z: aFloat [
 
-	self position z: aFloat
+	self position: (BlPoint3D x: self position x y: self position y z: aFloat)
 ]

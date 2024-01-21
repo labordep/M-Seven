@@ -33,7 +33,7 @@ MSevenSprite >> texture: aForm [
 ]
 
 { #category : #texture }
-MSevenSprite >> textureToDiplay [
+MSevenSprite >> textureToDisplay [
 
 	^ self texture
 ]

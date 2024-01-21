@@ -20,8 +20,7 @@ MSevenPoseUtils class >> moveBackwardPose: aPose speed: aSpeed [
 	offset := BlPoint3D x: (speedCos) y: (speedSin) z: 0.
 	position := aPose position.
 	
-	self flag:'labordep: add + for BlPoint3D in Bloc'.
-	newPosition := BlPoint3D x: (position x + offset x) y: (position y + offset y) z: (position z + offset z).
+	newPosition := position + offset.
 	
 	newPose := aPose copy.
 	newPose position: newPosition.
@@ -29,6 +28,18 @@ MSevenPoseUtils class >> moveBackwardPose: aPose speed: aSpeed [
 	^ newPose
 		
 	
+]
+
+{ #category : #'API -- move' }
+MSevenPoseUtils class >> moveDownPose: aPose speed: aSpeed [
+	
+	| newPose newAltitude |
+	newAltitude := aPose z - aSpeed.
+	
+	newPose := aPose copy.
+	newPose z: (newAltitude max: 0).
+	
+	^ newPose
 ]
 
 { #category : #'API -- move' }
@@ -46,9 +57,7 @@ MSevenPoseUtils class >> moveForwardPose: aPose speed: aSpeed [
 	
 	position := aPose position.
 	
-	"Calculate the new position by adding the offset to the current position"
-	self flag:'labordep: add + for BlPoint3D in Bloc'.
-	newPosition := BlPoint3D x: (position x + offset x) y: (position y + offset y) z: (position z + offset z).
+	newPosition := position + offset.
 	
 	newPose := aPose copy.
 	newPose position: newPosition.
@@ -70,9 +79,8 @@ MSevenPoseUtils class >> moveLeftSidePose: aPose speed: aSpeed [
 	
 	offset := BlPoint3D x: (speedCos negated) y: (speedSin) z: 0.
 	position := aPose position.
-	
-	self flag:'labordep: add + for BlPoint3D in Bloc'.
-	newPosition := BlPoint3D x: (position x + offset x) y: (position y + offset y) z: (position z + offset z).
+
+	newPosition := position + offset.
 	
 	newPose := aPose copy.
 	newPose position: newPosition.
@@ -95,8 +103,7 @@ MSevenPoseUtils class >> moveRightSidePose: aPose speed: aSpeed [
 	offset := BlPoint3D x: (speedCos) y: (speedSin negated) z: 0.
 	position := aPose position.
 	
-	self flag:'labordep: add + for BlPoint3D in Bloc'.
-	newPosition := BlPoint3D x: (position x + offset x) y: (position y + offset y) z: (position z + offset z).
+	newPosition := position + offset.
 	
 	newPose := aPose copy.
 	newPose position: newPosition.
@@ -104,6 +111,18 @@ MSevenPoseUtils class >> moveRightSidePose: aPose speed: aSpeed [
 	^ newPose
 		
 	
+]
+
+{ #category : #'API -- move' }
+MSevenPoseUtils class >> moveUpPose: aPose speed: aSpeed [
+	
+	| newPose newAltitude |
+	newAltitude := aPose z + aSpeed.
+	
+	newPose := aPose copy.
+	newPose z: (newAltitude max: 0).
+	
+	^ newPose
 ]
 
 { #category : #'API -- move' }

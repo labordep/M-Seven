@@ -3,11 +3,22 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'scale',
 		'sprite'
 	],
 	#category : #'MSeven-Model'
 }
+
+{ #category : #testing }
+MSevenWorldLayer >> isGround [
+
+	^ false
+]
+
+{ #category : #testing }
+MSevenWorldLayer >> isSky [
+
+	^ false
+]
 
 { #category : #accessing }
 MSevenWorldLayer >> name [
@@ -19,18 +30,6 @@ MSevenWorldLayer >> name [
 MSevenWorldLayer >> name: anObject [
 
 	name := anObject
-]
-
-{ #category : #accessing }
-MSevenWorldLayer >> scale [
-
-	^ scale ifNil: [ scale := 1 ]
-]
-
-{ #category : #accessing }
-MSevenWorldLayer >> scale: anObject [
-
-	scale := anObject
 ]
 
 { #category : #accessing }

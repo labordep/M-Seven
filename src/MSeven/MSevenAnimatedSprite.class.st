@@ -44,7 +44,7 @@ MSevenAnimatedSprite >> initialize [
 { #category : #accessing }
 MSevenAnimatedSprite >> lastCallTime [
 
-	^ lastCallTime ifNil:[ lastCallTime := Time now ]
+	^ lastCallTime
 ]
 
 { #category : #accessing }
@@ -76,14 +76,14 @@ MSevenAnimatedSprite >> stepDuration: anObject [
 ]
 
 { #category : #accessing }
-MSevenAnimatedSprite >> textureToDiplay [
+MSevenAnimatedSprite >> textureToDisplay [
 
 	| now |
 	now := Time now.
-	(Time now asDuration > (self lastCallTime asDuration + self stepDuration)) ifTrue:[
+	(self lastCallTime isNil or:[(Time now asDuration > (self lastCallTime asDuration + self stepDuration))]) ifTrue:[
 		self nextTexture.
 		self lastCallTime: now.
 	].
 	
-	^ super textureToDiplay
+	^ super textureToDisplay
 ]

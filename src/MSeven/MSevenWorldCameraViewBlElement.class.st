@@ -16,10 +16,55 @@ Class {
 }
 
 { #category : #drawing }
+MSevenWorldCameraViewBlElement >> aeDrawActorsOn: aeCanvas [
+
+	| res halfWidth height horizonHeight altitude sin cos cameraY cameraXNegated halfHeight |
+	
+	true ifTrue:[^ self ].
+	
+	res := stepResolution ifNil:[ ^ self ].
+	height := res y.
+	halfWidth := (res x / 2) asInteger.
+	halfHeight := (res y / 2) asInteger.
+	sin := self camera pose yaw sin.
+	cos := self camera pose yaw cos.
+	horizonHeight := (height * self horizonProportion) ceiling.
+	altitude := self camera pose z.
+	cameraY := self camera pose y.
+	cameraXNegated := self camera pose x negated.
+
+	self world actors do: [ :actor | | actorPos |
+		
+		actorPos := (actor pose position x) @ (actor pose position y).
+		
+		"draw actors"
+		aeCanvas restoreContextAfter: [
+			aeCanvas pathTranslate: actorPos.
+			aeCanvas pathFactory: [ :cairoContext |
+				cairoContext rectangleTo: actor sprite extent. 
+			].
+			aeCanvas setBackgroundWithForm: actor sprite textureToDisplay alpha: 1.0.
+			aeCanvas setBorderOff.
+			aeCanvas drawFigure.
+		].		
+	].
+]
+
+{ #category : #drawing }
 MSevenWorldCameraViewBlElement >> aeDrawGeometryOn: aeCanvas [
 	"Draw directly to show a fresh camera surface."
 	
 	self aeDrawLayersOn: aeCanvas.
+	self aeDrawActorsOn: aeCanvas.
+]
+
+{ #category : #drawing }
+MSevenWorldCameraViewBlElement >> aeDrawGroundLayersOn: aeCanvas [
+
+	aeCanvas privateAeCairoContext 
+		source: layersSurfacePattern; 
+		rectangleTo: self size; 
+		fill
 ]
 
 { #category : #drawing }
@@ -50,10 +95,54 @@ MSevenWorldCameraViewBlElement >> aeDrawIgnoringOpacityAndTransformationOn: aeCa
 { #category : #drawing }
 MSevenWorldCameraViewBlElement >> aeDrawLayersOn: aeCanvas [
 	
-	aeCanvas privateAeCairoContext 
-		source: layersSurfacePattern; 
-		rectangleTo: self size; 
-		fill
+	self aeDrawSkyLayersOn: aeCanvas.
+	self aeDrawGroundLayersOn: aeCanvas.
+]
+
+{ #category : #drawing }
+MSevenWorldCameraViewBlElement >> aeDrawSkyLayersOn: aeCanvas [
+
+	| res width height layer horizonHeight rectangle yaw layerExtent x y |
+	
+	res := stepResolution ifNil:[ ^ self ].
+	width := res x.
+	height := res y.
+	horizonHeight := (height * self horizonProportion) ceiling.
+	yaw := self camera pose yaw.
+	"one sky for instant"
+	layer := (self world layers select:[ :e | e isSky ]) first.
+	layerExtent := layer sprite extent ifNil:[ ^ self ].
+	rectangle := (layerExtent x @ (horizonHeight / scaleFactor)).
+	x := ((rectangle x) * (yaw negated / 2)).
+	y := 0.
+	
+	Transcript show: x; cr.
+
+	aeCanvas restoreContextAfter: [
+		aeCanvas pathTranslate: x@y.
+		aeCanvas pathFactory: [ :cairoContext |
+			cairoContext rectangleTo: rectangle. 
+		].
+		aeCanvas setBackgroundWithForm: layer sprite textureToDisplay alpha: 1.0.
+		aeCanvas setBorderOff.
+		aeCanvas drawFigure.		
+	].
+]
+
+{ #category : #drawing }
+MSevenWorldCameraViewBlElement >> applyYaw: anAngle to: aPoint3D [
+    | cosYaw sinYaw rotatedX rotatedY rotatedZ |
+
+    cosYaw := anAngle cos.
+    sinYaw := anAngle sin.
+
+    "Appliquer la rotation autour de l'axe vertical (y)"
+    rotatedX := (aPoint3D x * cosYaw) + (aPoint3D z * sinYaw).
+    rotatedY := aPoint3D y.
+    rotatedZ := (aPoint3D z * cosYaw) - (aPoint3D x * sinYaw).
+
+    ^ BlPoint3D x: rotatedX y: rotatedY z: rotatedZ.
+
 ]
 
 { #category : #accessing }
@@ -121,6 +210,13 @@ MSevenWorldCameraViewBlElement >> layersSurface: anObject [
 	layersSurface := anObject
 ]
 
+{ #category : #private }
+MSevenWorldCameraViewBlElement >> normalizeCoordinates: point screenWidth: width screenHeight: height [
+	"Normalisation des coordonnées entre -1 et 1"
+
+	^ point x / width * 2 - 1 @ (1 - point y / height * 2)
+]
+
 { #category : #initialization }
 MSevenWorldCameraViewBlElement >> prepareWorld [
 
@@ -163,7 +259,7 @@ MSevenWorldCameraViewBlElement >> scaleFactor: aFloat [
 { #category : #updating }
 MSevenWorldCameraViewBlElement >> updateLayersSurface [
 
-	| width height halfWidth halfHeight sin cos horizonHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent res cameraY cameraXNegated |
+	| width height halfWidth halfHeight sin cos horizonHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent res cameraY cameraXNegated texture |
 	
 	res := stepResolution ifNil:[ ^ self ].
 	
@@ -181,9 +277,10 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 	horizontalLineByteLength := layersSurface stride.
 		
 	"only one layer for this POC"
-	layer := self world layers first. 
+	layer := (self world layers select:[ :e | e isGround ]) first. 
 	scale := layer scale.
 	layerExtent := layer sprite extent ifNil:[ ^ self ].
+	texture := layer sprite textureToDisplay.
 	
 	"iterating over the screen array"
 	1 to: width do: [ :i |
@@ -191,8 +288,8 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 			| x y z px py rx ry floorPos floorColor attenuation |
 			"x y z"
 			x := halfWidth - i.
-			y := j + self camera fieldOfView.
-			z := j - horizonHeight + altitude.
+			y := (j + self camera fieldOfView).
+			z := (j - horizonHeight) max: 0.0001.
 			
 			"yaw processing"
 			rx := (x * cos) - (y * sin).
@@ -203,10 +300,9 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 			py := ry / z + cameraXNegated * scale.
 			
 			"floor pixel pos and color"
-			floorPos := Point
-				x: ((px \\ (layerExtent x)) asInteger)
-				y: (layerExtent y - ((py \\ layerExtent y) asInteger) - 1).
-			floorColor := layer sprite textureToDiplay colorAt: floorPos.
+			floorPos := (layerExtent x - ((px \\ (layerExtent x)) asInteger) - 1)
+				@ (layerExtent y - ((py \\ layerExtent y) asInteger) - 1).
+			floorColor := texture colorAt: floorPos.
 			
 			"shading & fog"
 			attenuation := (10 * ((z abs) / halfHeight)) max: 0; min: 1.

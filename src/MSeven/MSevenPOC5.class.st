@@ -76,27 +76,59 @@ MSevenPOC5 >> computeViewResolution [
 { #category : #initialization }
 MSevenPOC5 >> createWorldActors [
 
-	| pharoActor |
-	pharoActor := MSevenWorldActor new.
-	pharoActor sprite: (self iconNamed: #pharo).
+	| pharoActor sharedTexture |
+	sharedTexture := MSevenResources actor_pharo.
 	
-	self world addActor: pharoActor
+	pharoActor := MSevenWorldActor new.
+	pharoActor name: 'pharo'.
+	pharoActor sprite: (MSevenSprite new texture: sharedTexture).
+	self world addActor: pharoActor.
+	
+	pharoActor := MSevenWorldActor new.
+	pharoActor name: 'pharo'.
+	pharoActor pose x: 1000.
+	pharoActor sprite: (MSevenSprite new texture: sharedTexture).
+	self world addActor: pharoActor.
+	
+	pharoActor := MSevenWorldActor new.
+	pharoActor name: 'pharo'.
+	pharoActor pose y: 1000.
+	pharoActor sprite: (MSevenSprite new texture: sharedTexture).
+	self world addActor: pharoActor.
+	
+	pharoActor := MSevenWorldActor new.
+	pharoActor name: 'pharo'.
+	pharoActor pose x: 1000.
+	pharoActor pose y: 1000.
+	pharoActor sprite: (MSevenSprite new texture: sharedTexture).
+	self world addActor: pharoActor.
 ]
 
 { #category : #initialization }
 MSevenPOC5 >> createWorldLayers [
 
 	| layer sprite |
+
+	"ground"
 	sprite := MSevenAnimatedSprite new.
 	sprite addTexture: MSevenResources ground_pharo_step1.
 	sprite addTexture: MSevenResources ground_pharo_step2.
 	sprite addTexture: MSevenResources ground_pharo_step3.
-	
-	layer := MSevenWorldLayer new.
+
+	layer := MSevenWorldGroundLayer new.
 	layer name: 'Ground'.
 	layer sprite: sprite.
 	layer scale: 50.
-	self world addLayer: layer
+	self world addLayer: layer.
+
+	"sky"	
+	sprite := MSevenSprite new.
+	sprite texture: MSevenResources sky_pharo.
+	
+	layer := MSevenWorldSkyLayer new.
+	layer name: 'Sky'.
+	layer sprite: sprite.
+	self world addLayer: layer.
 ]
 
 { #category : #initialization }
@@ -123,7 +155,7 @@ MSevenPOC5 >> initializeCamera [
 	
 	camera := MSevenCamera new.
 	camera fieldOfView: 250.
-	camera pose position x: 0 y: 0 z: 1.0.
+	camera pose position x: 0 y: 0 z: 0.0.
 ]
 
 { #category : #initialization }
@@ -171,6 +203,7 @@ MSevenPOC5 >> installSpaceHandlers [
 	space addEventHandler: (BlEventHandler
 			 on: BlKeyDownEvent
 			 do: [ :e | self receiveKeyDownEvent: e ]).
+			
 	space addEventHandler: (BlEventHandler
 			 on: BlKeyUpEvent
 			 do: [ :e | self receiveKeyUpEvent: e ])
@@ -188,6 +221,17 @@ MSevenPOC5 >> moveBackwardCamera [
 ]
 
 { #category : #'private - events' }
+MSevenPOC5 >> moveDownCamera [
+
+	| newPose |
+	newPose := MSevenPoseUtils
+		                  moveDownPose: self camera pose
+		                  speed: self cameraSpeed.
+	
+	self camera pose: newPose
+]
+
+{ #category : #'private - events' }
 MSevenPOC5 >> moveForwardCamera [
 
 	| newPose |
@@ -198,12 +242,22 @@ MSevenPOC5 >> moveForwardCamera [
 	self camera pose: newPose
 ]
 
+{ #category : #'private - events' }
+MSevenPOC5 >> moveUpCamera [
+
+	| newPose |
+	newPose := MSevenPoseUtils
+		                  moveUpPose: self camera pose
+		                  speed: self cameraSpeed.
+	
+	self camera pose: newPose
+]
+
 { #category : #events }
 MSevenPOC5 >> receiveKeyDownEvent: anEvent [
 	"Set the key down actions to move the camera"
 
 	"LTBR Arrow or ZQSD/WASD for azerty/qwerty keyboard"
-
 	(anEvent key isArrowUp or: [
 		 anEvent key = KeyboardKey Z or: [ anEvent key = KeyboardKey W ] ])
 		ifTrue: [
@@ -226,6 +280,17 @@ MSevenPOC5 >> receiveKeyDownEvent: anEvent [
 		self turnRightCamera.
 		^self	
 	].
+
+	"Altitude management : R/F"
+	(anEvent key = (KeyboardKey R)) ifTrue:[
+		self moveUpCamera.
+		^self	
+	]. 
+
+	(anEvent key = (KeyboardKey F)) ifTrue:[
+		self moveDownCamera.
+		^self	
+	]. 
 ]
 
 { #category : #events }
