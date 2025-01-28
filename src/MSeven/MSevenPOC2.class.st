@@ -1,22 +1,24 @@
 Class {
-	#name : #MSevenPOC2,
-	#superclass : #Object,
+	#name : 'MSevenPOC2',
+	#superclass : 'Object',
 	#instVars : [
 		'map',
 		'viewResolution',
 		'viewSurface'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC2 class >> start [
 	<script>
 	
 	self new.
 ]
 
-{ #category : #'pyramid-serialized-bloc' }
+{ #category : 'pyramid-serialized-bloc' }
 MSevenPOC2 class >> view [
 	"This class has been generated using Pyramid.
 
@@ -100,7 +102,7 @@ MSevenPOC2 class >> view [
 ]'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC2 >> initialize [ 
 	
 	| view space |
@@ -129,7 +131,7 @@ MSevenPOC2 >> initialize [
 	] forkAt: Processor userBackgroundPriority named: 'M-SevenPOC2'. 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC2 >> initializeMap: aForm [
 
 	map := aForm.
@@ -139,7 +141,7 @@ MSevenPOC2 >> initializeMap: aForm [
 	viewSurface newContext sourceColor: Color black; rectangle: (0@0 extent: viewResolution); fill.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC2 >> moveCameraToPosition: aPoint angle: anAngle [
 
 	| width height halfWidth halfHeight focalLens scale position sin cos beginHeight viewContext |

@@ -1,10 +1,12 @@
 Class {
-	#name : #MSevenWorldSkyLayer,
-	#superclass : #MSevenWorldLayer,
-	#category : #'MSeven-Model'
+	#name : 'MSevenWorldSkyLayer',
+	#superclass : 'MSevenWorldLayer',
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 MSevenWorldSkyLayer >> isSky [
 
 	^ true

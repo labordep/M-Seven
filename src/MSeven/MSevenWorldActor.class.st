@@ -1,32 +1,34 @@
 Class {
-	#name : #MSevenWorldActor,
-	#superclass : #MSevenWorldEntity,
+	#name : 'MSevenWorldActor',
+	#superclass : 'MSevenWorldEntity',
 	#instVars : [
 		'pose',
 		'sprite'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldActor >> pose [
 
 	^ pose ifNil:[ pose := MSevenPose new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldActor >> pose: anObject [
 
 	pose := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldActor >> sprite [
 
 	^ sprite
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldActor >> sprite: aSprite [
 
 	sprite := aSprite

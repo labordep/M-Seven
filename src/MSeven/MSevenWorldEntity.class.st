@@ -1,19 +1,21 @@
 Class {
-	#name : #MSevenWorldEntity,
-	#superclass : #Object,
+	#name : 'MSevenWorldEntity',
+	#superclass : 'Object',
 	#instVars : [
 		'name'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldEntity >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldEntity >> name: anObject [
 
 	name := anObject

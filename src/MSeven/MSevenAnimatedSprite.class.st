@@ -1,59 +1,61 @@
 Class {
-	#name : #MSevenAnimatedSprite,
-	#superclass : #MSevenSprite,
+	#name : 'MSevenAnimatedSprite',
+	#superclass : 'MSevenSprite',
 	#instVars : [
 		'formList',
 		'currentStep',
 		'lastCallTime',
 		'stepDuration'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #texture }
+{ #category : 'texture' }
 MSevenAnimatedSprite >> addTexture: aForm [
 
 	self formList add: aForm
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> extent [
 
 	^ extent ifNil:[ extent := self formList first extent ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> formList [
 
 	^ formList ifNil:[ formList := OrderedCollection new: 5 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> formList: anObject [
 
 	formList := anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 MSevenAnimatedSprite >> initialize [ 
 
 	super initialize.
 	currentStep := 0.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> lastCallTime [
 
 	^ lastCallTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> lastCallTime: anObject [
 
 	lastCallTime := anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 MSevenAnimatedSprite >> nextTexture [
 	"change texture to display at each call"
 	
@@ -63,19 +65,19 @@ MSevenAnimatedSprite >> nextTexture [
 	self texture: (self formList at: currentStep).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> stepDuration [
 
 	^ stepDuration ifNil: [ stepDuration := 1 second ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> stepDuration: anObject [
 
 	stepDuration := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAnimatedSprite >> textureToDisplay [
 
 	| now |

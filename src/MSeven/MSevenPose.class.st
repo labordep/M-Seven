@@ -1,14 +1,16 @@
 Class {
-	#name : #MSevenPose,
-	#superclass : #Object,
+	#name : 'MSevenPose',
+	#superclass : 'Object',
 	#instVars : [
 		'position',
 		'orientation'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPose >> copy [
 
 	| copy |
@@ -18,7 +20,7 @@ MSevenPose >> copy [
 	^ copy
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPose >> initialize [ 
 
 	super initialize.
@@ -26,100 +28,100 @@ MSevenPose >> initialize [
 	self orientation: BlVector3D zero.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> orientation [
 
 	^ orientation ifNil:[ orientation := BlVector3D new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> orientation: aBlVector3D [
 
 	orientation := aBlVector3D
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> pitch [
 
 	^ self orientation z
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> pitch: anAngle [
 
 	self orientation:
 		(BlVector3D x: self orientation x y: self orientation y z: anAngle)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> position [
 
 	^ position ifNil:[ position := BlPoint3D new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> position: aBlPoint3D [
 
 	position := aBlPoint3D
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> roll [
 
 	^ self orientation x
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> roll: anAngle [
 
 	self orientation:
 		(BlVector3D x: anAngle y: self orientation y z: self orientation z)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> x [
 
 	^ self position x
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> x: aFloat [
 
 	self position: (BlPoint3D x: aFloat y: self position y z: self position z)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> y [
 
 	^ self position y
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> y: aFloat [
 
 	self position: (BlPoint3D x: self position x y: aFloat z: self position z)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> yaw [
 
 	^ self orientation y
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> yaw: anAngle [
 
 	self orientation:
 		(BlVector3D x: self orientation x y: anAngle z: self orientation z)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> z [
 
 	^ self position z
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPose >> z: aFloat [
 
 	self position: (BlPoint3D x: self position x y: self position y z: aFloat)

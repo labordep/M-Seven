@@ -1,44 +1,46 @@
 Class {
-	#name : #MSevenWorldLayer,
-	#superclass : #Object,
+	#name : 'MSevenWorldLayer',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'sprite'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 MSevenWorldLayer >> isGround [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 MSevenWorldLayer >> isSky [
 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldLayer >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldLayer >> name: anObject [
 
 	name := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldLayer >> sprite [
 
 	^ sprite
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldLayer >> sprite: anObject [
 
 	sprite := anObject

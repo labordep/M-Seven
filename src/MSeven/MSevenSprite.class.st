@@ -1,38 +1,40 @@
 Class {
-	#name : #MSevenSprite,
-	#superclass : #Object,
+	#name : 'MSevenSprite',
+	#superclass : 'Object',
 	#instVars : [
 		'form',
 		'extent'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenSprite >> extent [
 
 	^ extent ifNil:[ extent := self texture extent ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenSprite >> extent: anObject [
 
 	extent := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenSprite >> texture [
 
 	^ form
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenSprite >> texture: aForm [
 
 	form := aForm
 ]
 
-{ #category : #texture }
+{ #category : 'texture' }
 MSevenSprite >> textureToDisplay [
 
 	^ self texture
