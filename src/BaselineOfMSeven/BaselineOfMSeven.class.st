@@ -22,12 +22,6 @@ BaselineOfMSeven >> baseline: spec [
 { #category : 'baselines' }
 BaselineOfMSeven >> dependencies: spec [
 
-	"2D : Bloc"
-	spec baseline: 'Bloc' with: [ spec repository: 'github://pharo-graphics/Bloc:master/src' ].
-
-	"UI : Toplo"
-	spec baseline: 'Toplo' with: [ spec repository: 'github://pharo-graphics/Toplo:master/src' ].
-
 	"UI tool : Pyramid"
 	spec baseline: 'Pyramid' with: [ spec repository: 'github://OpenSmock/Pyramid:main/src' ].
 ]
