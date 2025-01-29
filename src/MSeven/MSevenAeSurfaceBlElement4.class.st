@@ -97,9 +97,10 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 
 	| width height halfWidth halfHeight sin cos beginHeight bufferAddress horizontalLineByteLength altitude |
 	
-	cameraResolution ifNil:[ ^ self ].
-	cameraSurface ifNil:[ ^ self ].
-	
+	cameraResolution ifNil: [ ^ self ].
+	cameraSurface ifNil: [ ^ self ].
+	cameraSurface isNull ifTrue: [ ^ self ].
+
 	width := cameraResolution x.
 	height := cameraResolution y.
 	halfWidth := (cameraResolution x / 2) asInteger.
