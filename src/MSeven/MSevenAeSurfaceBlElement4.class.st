@@ -23,17 +23,19 @@ MSevenAeSurfaceBlElement4 >> aeDrawGeometryOn: aeCanvas [
 	"Ignore geometry and other visual properties and directly show a fresh camera surface."
 
 	| newScale |
-	pattern ifNil:[ ^ self ].
+	pattern ifNil: [ ^ self ].
 
 	self refreshCameraSurface.
-	
+
 	"update scale factor"
-	newScale := (self size / cameraResolution).
-	newScale := (newScale x < newScale y ifTrue:[newScale x] ifFalse:[newScale y]).
-	self scaleFactor: newScale. 
-	
+	newScale := self size / cameraResolution.
+	newScale := newScale x < newScale y
+		            ifTrue: [ newScale x ]
+		            ifFalse: [ newScale y ].
+	self scaleFactor: newScale.
+
 	aeCanvas privateAeCairoContext
-		source: pattern;
+		sourcePattern: pattern;
 		rectangleTo: self size;
 		fill
 ]

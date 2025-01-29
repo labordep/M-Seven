@@ -64,7 +64,7 @@ MSevenWorldCameraViewBlElement >> aeDrawGeometryOn: aeCanvas [
 MSevenWorldCameraViewBlElement >> aeDrawGroundLayersOn: aeCanvas [
 
 	aeCanvas privateAeCairoContext 
-		source: layersSurfacePattern; 
+		sourcePattern: layersSurfacePattern; 
 		rectangleTo: self size; 
 		fill
 ]
