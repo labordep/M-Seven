@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenPOC5,
-	#superclass : #Object,
+	#name : 'MSevenPOC5',
+	#superclass : 'Object',
 	#instVars : [
 		'camera',
 		'cameraSpeed',
@@ -10,17 +10,19 @@ Class {
 		'defaultWindowSize',
 		'space'
 	],
-	#category : #'MSeven-POCwithModel'
+	#category : 'MSeven-POCwithModel',
+	#package : 'MSeven',
+	#tag : 'POCwithModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC5 class >> start [
 	<script>
 	
 	self new.
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 MSevenPOC5 >> addSpaceEventHandlers [
 
 	"Install events listener"
@@ -29,25 +31,25 @@ MSevenPOC5 >> addSpaceEventHandlers [
 			 do: [ :e | self view resolution: self computeViewResolution ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC5 >> camera [
 
 	^ camera
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC5 >> cameraSpeed [
 
 	^ cameraSpeed ifNil: [ cameraSpeed := 0.5 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC5 >> cameraSpeed: anObject [
 
 	cameraSpeed := anObject
 ]
 
-{ #category : #computing }
+{ #category : 'computing' }
 MSevenPOC5 >> computeViewResolution [
 	"Compute the world resolution to have correct ratio depending size of the application window to be in fullsize"
 
@@ -73,7 +75,7 @@ MSevenPOC5 >> computeViewResolution [
 	^ newResolution rounded
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> createWorldActors [
 
 	| pharoActor sharedTexture |
@@ -104,7 +106,7 @@ MSevenPOC5 >> createWorldActors [
 	self world addActor: pharoActor.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> createWorldLayers [
 
 	| layer sprite |
@@ -131,7 +133,7 @@ MSevenPOC5 >> createWorldLayers [
 	self world addLayer: layer.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> initialize [ 
 
 	super initialize.
@@ -150,7 +152,7 @@ MSevenPOC5 >> initialize [
 	self installSpaceHandlers.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> initializeCamera [
 	
 	camera := MSevenCamera new.
@@ -158,7 +160,7 @@ MSevenPOC5 >> initializeCamera [
 	camera pose position x: 0 y: 0 z: 0.0.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> initializeSpace [
 
 	self view constraintsDo: [ :c |
@@ -171,7 +173,7 @@ MSevenPOC5 >> initializeSpace [
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> initializeView [
 
 	| transition |
@@ -191,13 +193,13 @@ MSevenPOC5 >> initializeView [
 	view enqueueTask: transition.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC5 >> initializeWorld [
 
 	world := MSevenWorld new.
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 MSevenPOC5 >> installSpaceHandlers [
 
 	space addEventHandler: (BlEventHandler
@@ -209,7 +211,7 @@ MSevenPOC5 >> installSpaceHandlers [
 			 do: [ :e | self receiveKeyUpEvent: e ])
 ]
 
-{ #category : #'private - events' }
+{ #category : 'private - events' }
 MSevenPOC5 >> moveBackwardCamera [
 
 	| newPose |
@@ -220,7 +222,7 @@ MSevenPOC5 >> moveBackwardCamera [
 	self camera pose: newPose
 ]
 
-{ #category : #'private - events' }
+{ #category : 'private - events' }
 MSevenPOC5 >> moveDownCamera [
 
 	| newPose |
@@ -231,7 +233,7 @@ MSevenPOC5 >> moveDownCamera [
 	self camera pose: newPose
 ]
 
-{ #category : #'private - events' }
+{ #category : 'private - events' }
 MSevenPOC5 >> moveForwardCamera [
 
 	| newPose |
@@ -242,7 +244,7 @@ MSevenPOC5 >> moveForwardCamera [
 	self camera pose: newPose
 ]
 
-{ #category : #'private - events' }
+{ #category : 'private - events' }
 MSevenPOC5 >> moveUpCamera [
 
 	| newPose |
@@ -253,7 +255,7 @@ MSevenPOC5 >> moveUpCamera [
 	self camera pose: newPose
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 MSevenPOC5 >> receiveKeyDownEvent: anEvent [
 	"Set the key down actions to move the camera"
 
@@ -293,11 +295,11 @@ MSevenPOC5 >> receiveKeyDownEvent: anEvent [
 	]. 
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 MSevenPOC5 >> receiveKeyUpEvent: anEvent [
 ]
 
-{ #category : #'private - events' }
+{ #category : 'private - events' }
 MSevenPOC5 >> turnLeftCamera [
 
 	| newPose |
@@ -308,7 +310,7 @@ MSevenPOC5 >> turnLeftCamera [
 	self camera pose: newPose 
 ]
 
-{ #category : #'private - events' }
+{ #category : 'private - events' }
 MSevenPOC5 >> turnRightCamera [
 
 	| newPose |
@@ -319,19 +321,19 @@ MSevenPOC5 >> turnRightCamera [
 	self camera pose: newPose
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 MSevenPOC5 >> updateCameraView: aCameraViewElement step: aNumber [
 
 	aCameraViewElement invalidate.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC5 >> view [
 
 	^ view
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC5 >> world [
 
 	^ world

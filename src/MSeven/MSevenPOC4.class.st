@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenPOC4,
-	#superclass : #Object,
+	#name : 'MSevenPOC4',
+	#superclass : 'Object',
 	#instVars : [
 		'view',
 		'space',
@@ -20,17 +20,19 @@ Class {
 		'isArrowRightPressed',
 		'worldResolution'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC4 class >> start [
 	<script>
 	
 	self new.
 ]
 
-{ #category : #'pyramid-serialized-bloc' }
+{ #category : 'pyramid-serialized-bloc' }
 MSevenPOC4 class >> view [
 	"This class has been generated using Pyramid.
 
@@ -242,7 +244,7 @@ MSevenPOC4 class >> view [
 ]'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 MSevenPOC4 >> computeWorldResolution [
 	"Compute the world resolution to have correct ratio depending size of the application window to be in fullsize"
 
@@ -270,7 +272,7 @@ MSevenPOC4 >> computeWorldResolution [
 	worldResolution := newResolution rounded.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC4 >> initialize [
 
 	super initialize.
@@ -310,7 +312,7 @@ MSevenPOC4 >> initialize [
 				 self updateSurfaceElementUpdate ])
 ]
 
-{ #category : #ui }
+{ #category : 'ui' }
 MSevenPOC4 >> initializeToploUI [
 
 	"Set UI Theme"
@@ -321,7 +323,7 @@ MSevenPOC4 >> initializeToploUI [
 	view addChild: fullScreenButton.
 ]
 
-{ #category : #ui }
+{ #category : 'ui' }
 MSevenPOC4 >> initializeView [
 
 	"Materialize the app view"
@@ -335,7 +337,7 @@ MSevenPOC4 >> initializeView [
 	
 ]
 
-{ #category : #listeners }
+{ #category : 'listeners' }
 MSevenPOC4 >> processKeyDownEvent: anEvent [
 
 	"Set the key down state for movement keys"
@@ -385,7 +387,7 @@ MSevenPOC4 >> processKeyDownEvent: anEvent [
 	
 ]
 
-{ #category : #listeners }
+{ #category : 'listeners' }
 MSevenPOC4 >> processKeyUpEvent: anEvent [
 
 	"Set the key up state for movement keys"
@@ -434,7 +436,7 @@ MSevenPOC4 >> processKeyUpEvent: anEvent [
 	].
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC4 >> startSurfaceElementUpdate [
 	| transition |
 	
@@ -457,14 +459,14 @@ MSevenPOC4 >> startSurfaceElementUpdate [
 	
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 MSevenPOC4 >> toggleFullscreen [
 
 	space ifNil:[ ^ self ].
-	space fullscreen: (space fullscreen not).
+	space fullscreen: (space isFullscreen not)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 MSevenPOC4 >> updateMovementStep: aNumber [
 	"Compute movement depending down/up keys"
 	
@@ -491,14 +493,14 @@ MSevenPOC4 >> updateMovementStep: aNumber [
 	cameraAltitude := (cameraAltitude max: 0.001) min: 100.0.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC4 >> updateSurfaceElementUpdate [
 	"Call this method to change the computing resolution after an application window resize"
 	
 	surfaceElement cameraResolution: worldResolution
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 MSevenPOC4 >> updateSurfaceStep: aNumber [
 	
 	"Update surface"

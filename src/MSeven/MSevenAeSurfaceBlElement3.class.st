@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenAeSurfaceBlElement3,
-	#superclass : #BlElement,
+	#name : 'MSevenAeSurfaceBlElement3',
+	#superclass : 'BlElement',
 	#instVars : [
 		'map',
 		'cameraSurface',
@@ -10,10 +10,12 @@ Class {
 		'pattern',
 		'scaleFactor'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenAeSurfaceBlElement3 >> aeDrawGeometryOn: aeCanvas [
 	"Ignore geometry and other visual properties and directly show a fresh camera surface."
 
@@ -26,7 +28,7 @@ MSevenAeSurfaceBlElement3 >> aeDrawGeometryOn: aeCanvas [
 		fill
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement3 >> cameraPosition: aPoint cameraAngle: aNumber [ 
 
 	cameraPosition := aPoint.
@@ -34,7 +36,7 @@ MSevenAeSurfaceBlElement3 >> cameraPosition: aPoint cameraAngle: aNumber [
 	self invalidate
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenAeSurfaceBlElement3 >> initialize [
 
 	super initialize.
@@ -42,7 +44,7 @@ MSevenAeSurfaceBlElement3 >> initialize [
 	scaleFactor := 1.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement3 >> map: aForm cameraResolution: aPoint [
 
 	map := aForm.
@@ -68,7 +70,7 @@ MSevenAeSurfaceBlElement3 >> map: aForm cameraResolution: aPoint [
 			            y: 1.0 / scaleFactor) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenAeSurfaceBlElement3 >> refreshCameraSurface [
 
 	| width height halfWidth halfHeight focalLens scale sin cos beginHeight bufferAddress horizontalLineByteLength |
@@ -123,7 +125,7 @@ MSevenAeSurfaceBlElement3 >> refreshCameraSurface [
 	cameraSurface markDirty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement3 >> scaleFactor: aFloat [
 
 	scaleFactor := aFloat

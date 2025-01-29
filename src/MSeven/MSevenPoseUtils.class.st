@@ -2,12 +2,14 @@
 Utils class to manage coordinates
 "
 Class {
-	#name : #MSevenPoseUtils,
-	#superclass : #Object,
-	#category : #'MSeven-Model'
+	#name : 'MSevenPoseUtils',
+	#superclass : 'Object',
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> moveBackwardPose: aPose speed: aSpeed [
 	"Move backward a pose, return a new pose"
 	
@@ -30,7 +32,7 @@ MSevenPoseUtils class >> moveBackwardPose: aPose speed: aSpeed [
 	
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> moveDownPose: aPose speed: aSpeed [
 	
 	| newPose newAltitude |
@@ -42,7 +44,7 @@ MSevenPoseUtils class >> moveDownPose: aPose speed: aSpeed [
 	^ newPose
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> moveForwardPose: aPose speed: aSpeed [
 	"Move forward a pose, return a new pose"
 	
@@ -67,7 +69,7 @@ MSevenPoseUtils class >> moveForwardPose: aPose speed: aSpeed [
 	
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> moveLeftSidePose: aPose speed: aSpeed [
 	"Move left side a pose, return a new pose"
 	
@@ -90,7 +92,7 @@ MSevenPoseUtils class >> moveLeftSidePose: aPose speed: aSpeed [
 	
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> moveRightSidePose: aPose speed: aSpeed [
 	"Move right side a pose, return a new pose"
 	
@@ -113,7 +115,7 @@ MSevenPoseUtils class >> moveRightSidePose: aPose speed: aSpeed [
 	
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> moveUpPose: aPose speed: aSpeed [
 	
 	| newPose newAltitude |
@@ -125,7 +127,7 @@ MSevenPoseUtils class >> moveUpPose: aPose speed: aSpeed [
 	^ newPose
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> turnLeftPose: aPose angle: anAngleInRadians [
 	
 	| newYaw newPose |
@@ -137,7 +139,7 @@ MSevenPoseUtils class >> turnLeftPose: aPose angle: anAngleInRadians [
 	^ newPose
 ]
 
-{ #category : #'API -- move' }
+{ #category : 'API -- move' }
 MSevenPoseUtils class >> turnRightPose: aPose angle: anAngleInRadians [
 	
 	| newYaw newPose |
@@ -149,6 +151,6 @@ MSevenPoseUtils class >> turnRightPose: aPose angle: anAngleInRadians [
 	^ newPose
 ]
 
-{ #category : #'see class side' }
+{ #category : 'see class side' }
 MSevenPoseUtils >> seeClassSide [ 
 ]

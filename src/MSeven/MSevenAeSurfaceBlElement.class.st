@@ -1,13 +1,15 @@
 Class {
-	#name : #MSevenAeSurfaceBlElement,
-	#superclass : #BlElement,
+	#name : 'MSevenAeSurfaceBlElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'surface'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenAeSurfaceBlElement >> aeDrawOn: aeCanvas [
 
 	surface ifNil:[ ^ self ].
@@ -25,13 +27,13 @@ MSevenAeSurfaceBlElement >> aeDrawOn: aeCanvas [
         ]    
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenAeSurfaceBlElement >> surface [
 
 	^ surface
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenAeSurfaceBlElement >> surface: aSurface [
 
 	surface := aSurface

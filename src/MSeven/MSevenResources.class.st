@@ -6,12 +6,14 @@ Memo :
 - To decode image : Form fromBinaryStream: 'xxxxx' base64Decoded readStream 
 "
 Class {
-	#name : #MSevenResources,
-	#superclass : #Object,
-	#category : #'MSeven-Assets'
+	#name : 'MSevenResources',
+	#superclass : 'Object',
+	#category : 'MSeven-Assets',
+	#package : 'MSeven',
+	#tag : 'Assets'
 }
 
-{ #category : #actors }
+{ #category : 'actors' }
 MSevenResources class >> actor_pharo [
 	<script: 'self actor_pharo inspect'>
 
@@ -48,7 +50,7 @@ bXPab0FXDkCPsWym0u+GSQtju+bW9oewFACY0gFdmxbbM1+qydix/wHIEWrkH5sLfgAAAABJ
 RU5ErkJggg==' base64Decoded readStream
 ]
 
-{ #category : #textures }
+{ #category : 'textures' }
 MSevenResources class >> ground_checkerboard [
 	<script: 'self ground_checkerboard inspect'>
 
@@ -461,7 +463,7 @@ LoVyo4FJgcjot9/mwptg1GCJC3w2GY3Ovv7t0HjQNtnAZv/cLft8/Lf/H5M73/ppRt5fAAAA
 AElFTkSuQmCC' base64Decoded readStream
 ]
 
-{ #category : #textures }
+{ #category : 'textures' }
 MSevenResources class >> ground_pharo_step1 [
 	<script: 'self ground_pharo_step1 inspect'>
 
@@ -1368,7 +1370,7 @@ AAAAAMAABHQAAAAAAAxAQAcAAAAAwAAEdAAAAAAADEBABwAAAADAAP8/Ooh48HgepsgAAAAA
 SUVORK5CYII=' base64Decoded readStream
 ]
 
-{ #category : #textures }
+{ #category : 'textures' }
 MSevenResources class >> ground_pharo_step2 [
 	<script: 'self ground_pharo_step2 inspect'>
 
@@ -2344,7 +2346,7 @@ YEDQAQAAYEDQAQAAYEDQAQAAYEDQAQAAYEDQAQAAYEDQAQAAYEDQAQAAYEDQAQAAYEDQAQAA
 YCDv889FlPF3hgAAAABJRU5ErkJggg==' base64Decoded readStream
 ]
 
-{ #category : #textures }
+{ #category : 'textures' }
 MSevenResources class >> ground_pharo_step3 [
 	<script: 'self ground_pharo_step3 inspect'>
 
@@ -3436,7 +3438,7 @@ oAACHQAAAAog0AEAAKAAAh0AAAAKINABAACgAAIdAAAACiDQAQAAoAD/HzDkfDJqMygYAAAA
 AElFTkSuQmCC' base64Decoded readStream
 ]
 
-{ #category : #skies }
+{ #category : 'skies' }
 MSevenResources class >> sky_pharo [
 	<script: 'self sky_pharo inspect'>
 

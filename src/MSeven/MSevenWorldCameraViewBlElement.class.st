@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenWorldCameraViewBlElement,
-	#superclass : #BlElement,
+	#name : 'MSevenWorldCameraViewBlElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'world',
 		'camera',
@@ -12,10 +12,12 @@ Class {
 		'stepScaleFactor',
 		'horizonProportion'
 	],
-	#category : #'MSeven-View'
+	#category : 'MSeven-View',
+	#package : 'MSeven',
+	#tag : 'View'
 }
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> aeDrawActorsOn: aeCanvas [
 
 	| res halfWidth height horizonHeight altitude sin cos cameraY cameraXNegated halfHeight |
@@ -50,7 +52,7 @@ MSevenWorldCameraViewBlElement >> aeDrawActorsOn: aeCanvas [
 	].
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> aeDrawGeometryOn: aeCanvas [
 	"Draw directly to show a fresh camera surface."
 	
@@ -58,7 +60,7 @@ MSevenWorldCameraViewBlElement >> aeDrawGeometryOn: aeCanvas [
 	self aeDrawActorsOn: aeCanvas.
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> aeDrawGroundLayersOn: aeCanvas [
 
 	aeCanvas privateAeCairoContext 
@@ -67,7 +69,7 @@ MSevenWorldCameraViewBlElement >> aeDrawGroundLayersOn: aeCanvas [
 		fill
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> aeDrawIgnoringOpacityAndTransformationOn: aeCanvas [
 	
 	"compute dirty values if needed"
@@ -92,14 +94,14 @@ MSevenWorldCameraViewBlElement >> aeDrawIgnoringOpacityAndTransformationOn: aeCa
 	super aeDrawIgnoringOpacityAndTransformationOn: aeCanvas
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> aeDrawLayersOn: aeCanvas [
 	
 	self aeDrawSkyLayersOn: aeCanvas.
 	self aeDrawGroundLayersOn: aeCanvas.
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> aeDrawSkyLayersOn: aeCanvas [
 
 	| res width height layer horizonHeight rectangle yaw layerExtent x y |
@@ -127,7 +129,7 @@ MSevenWorldCameraViewBlElement >> aeDrawSkyLayersOn: aeCanvas [
 	].
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenWorldCameraViewBlElement >> applyYaw: anAngle to: aPoint3D [
     | cosYaw sinYaw rotatedX rotatedY rotatedZ |
 
@@ -143,39 +145,39 @@ MSevenWorldCameraViewBlElement >> applyYaw: anAngle to: aPoint3D [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> camera [
 
 	^ camera
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> camera: anObject [
 
 	camera := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> horizonProportion [
 	"return the place of the horizon in % of the resolution height"
 
 	^ horizonProportion ifNil:[ horizonProportion := 0.2 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> horizonProportion: anObject [
 
 	horizonProportion := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenWorldCameraViewBlElement >> initialize [
 
 	super initialize.
 	self installHandlers.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenWorldCameraViewBlElement >> initializeLayersSurface [
 
 	| extent |
@@ -188,7 +190,7 @@ MSevenWorldCameraViewBlElement >> initializeLayersSurface [
 	self updatePattern.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenWorldCameraViewBlElement >> installHandlers [
 
 	self addEventHandler: (BlEventHandler
@@ -196,32 +198,32 @@ MSevenWorldCameraViewBlElement >> installHandlers [
 			 do: [ self updateScale ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> layersSurface [
 
 	^ layersSurface
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> layersSurface: anObject [
 
 	layersSurface := anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 MSevenWorldCameraViewBlElement >> normalizeCoordinates: point screenWidth: width screenHeight: height [
 	"Normalisation des coordonnées entre -1 et 1"
 
 	^ point x / width * 2 - 1 @ (1 - point y / height * 2)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenWorldCameraViewBlElement >> prepareWorld [
 
 	
 ]
 
-{ #category : #projection }
+{ #category : 'projection' }
 MSevenWorldCameraViewBlElement >> project2DIsometricPointX: x y: y [
 
 	| sin cos |
@@ -229,32 +231,32 @@ MSevenWorldCameraViewBlElement >> project2DIsometricPointX: x y: y [
 	cos := self camera pose yaw cos.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> resolution [
 
 	^ resolution
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> resolution: anObject [
 
 	resolution := anObject.
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> scaleFactor [
 
 	^ scaleFactor ifNil:[ scaleFactor := 1.0 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> scaleFactor: aFloat [
 
 	scaleFactor := aFloat
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 MSevenWorldCameraViewBlElement >> updateLayersSurface [
 
 	| width height halfWidth halfHeight sin cos horizonHeight altitude bufferAddress horizontalLineByteLength scale layer layerExtent res cameraY cameraXNegated texture |
@@ -316,7 +318,7 @@ MSevenWorldCameraViewBlElement >> updateLayersSurface [
 	layersSurface markDirty
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 MSevenWorldCameraViewBlElement >> updatePattern [
 	
 	stepScaleFactor ifNil:[ ^ self ].
@@ -329,7 +331,7 @@ MSevenWorldCameraViewBlElement >> updatePattern [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> updateScale [
 
 	| newScale |
@@ -341,13 +343,13 @@ MSevenWorldCameraViewBlElement >> updateScale [
 	self scaleFactor: newScale
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> world [
 
 	^ world
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldCameraViewBlElement >> world: anObject [
 
 	world = anObject ifTrue:[ ^ self ].
