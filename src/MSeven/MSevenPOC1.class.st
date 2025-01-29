@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenPOC1,
-	#superclass : #Object,
+	#name : 'MSevenPOC1',
+	#superclass : 'Object',
 	#instVars : [
 		'floorTexture',
 		'floorTextureSize',
@@ -10,17 +10,19 @@ Class {
 		'cameraMove',
 		'view'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #'pyramid-serialized-bloc' }
+{ #category : 'pyramid-serialized-bloc' }
 MSevenPOC1 class >> start [
 	<script>
 	
 	self new.
 ]
 
-{ #category : #'pyramid-serialized-bloc' }
+{ #category : 'pyramid-serialized-bloc' }
 MSevenPOC1 class >> testView [
 	"This class has been generated using Pyramid.
 
@@ -111,7 +113,7 @@ MSevenPOC1 class >> testView [
 ]'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC1 >> initialize [
 
 	super initialize.
@@ -145,7 +147,7 @@ MSevenPOC1 >> initialize [
 		              named: 'M-SevenPOC1'
 ]
 
-{ #category : #texture }
+{ #category : 'texture' }
 MSevenPOC1 >> initializeTexture: aForm [
 
 	floorTexture := aForm.
@@ -156,7 +158,7 @@ MSevenPOC1 >> initializeTexture: aForm [
 	
 ]
 
-{ #category : #texture }
+{ #category : 'texture' }
 MSevenPOC1 >> loadTexture: anImage in: aBlElement [
 
 	| background screenImage |
@@ -170,13 +172,13 @@ MSevenPOC1 >> loadTexture: anImage in: aBlElement [
 	aBlElement background: background.
 ]
 
-{ #category : #moving }
+{ #category : 'moving' }
 MSevenPOC1 >> moveCameraToPosition: aPoint [
 
 	^ self moveCameraToPosition: aPoint angle: 0
 ]
 
-{ #category : #moving }
+{ #category : 'moving' }
 MSevenPOC1 >> moveCameraToPosition: aPoint angle: anAngle [
 
 	| width height halfWidth halfHeight focalLens scale position sin cos |

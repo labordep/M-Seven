@@ -1,26 +1,28 @@
 Class {
-	#name : #MSevenWorldGroundLayer,
-	#superclass : #MSevenWorldLayer,
+	#name : 'MSevenWorldGroundLayer',
+	#superclass : 'MSevenWorldLayer',
 	#instVars : [
 		'scale'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 MSevenWorldGroundLayer >> isGround [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldGroundLayer >> scale [
 	"define the size of meters per pixels"
 	
 	^ scale ifNil: [ scale := 1 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorldGroundLayer >> scale: anObject [
 
 	scale := anObject
