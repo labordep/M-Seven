@@ -1,38 +1,40 @@
 Class {
-	#name : #MSevenWorld,
-	#superclass : #Object,
+	#name : 'MSevenWorld',
+	#superclass : 'Object',
 	#instVars : [
 		'layers',
 		'actors'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorld >> actors [
 
 	^ actors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorld >> actors: anObject [
 
 	actors := anObject
 ]
 
-{ #category : #'accessing - actors' }
+{ #category : 'accessing - actors' }
 MSevenWorld >> addActor: anActor [
 
 	self actors add: anActor
 ]
 
-{ #category : #'accessing - layers' }
+{ #category : 'accessing - layers' }
 MSevenWorld >> addLayer: aLayer [
 
 	self layers add: aLayer 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorld >> initialize [ 
 
 	super initialize.
@@ -40,13 +42,13 @@ MSevenWorld >> initialize [
 	self layers: OrderedCollection new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorld >> layers [
 
 	^ layers
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenWorld >> layers: anObject [
 
 	layers := anObject

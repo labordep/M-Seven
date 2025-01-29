@@ -1,22 +1,24 @@
 Class {
-	#name : #MSevenPOC3,
-	#superclass : #Object,
+	#name : 'MSevenPOC3',
+	#superclass : 'Object',
 	#instVars : [
 		'map',
 		'viewResolution',
 		'viewSurface'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenPOC3 class >> start [
 	<script>
 	
 	self new.
 ]
 
-{ #category : #'pyramid-serialized-bloc' }
+{ #category : 'pyramid-serialized-bloc' }
 MSevenPOC3 class >> view [
 	"This class has been generated using Pyramid.
 
@@ -100,7 +102,7 @@ MSevenPOC3 class >> view [
 ]'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenPOC3 >> initialize [
 
 	| view space position angle |

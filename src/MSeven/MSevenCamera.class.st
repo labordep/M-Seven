@@ -1,32 +1,34 @@
 Class {
-	#name : #MSevenCamera,
-	#superclass : #Object,
+	#name : 'MSevenCamera',
+	#superclass : 'Object',
 	#instVars : [
 		'fieldOfView',
 		'pose'
 	],
-	#category : #'MSeven-Model'
+	#category : 'MSeven-Model',
+	#package : 'MSeven',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenCamera >> fieldOfView [
 
 	^ fieldOfView ifNil:[ fieldOfView := 0 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenCamera >> fieldOfView: anObject [
 
 	fieldOfView := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenCamera >> pose [
 
 	^ pose ifNil:[ pose := MSevenPose new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenCamera >> pose: aMSevenPose [
 
 	pose := aMSevenPose

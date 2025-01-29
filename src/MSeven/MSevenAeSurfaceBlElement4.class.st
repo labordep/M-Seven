@@ -1,6 +1,6 @@
 Class {
-	#name : #MSevenAeSurfaceBlElement4,
-	#superclass : #BlElement,
+	#name : 'MSevenAeSurfaceBlElement4',
+	#superclass : 'BlElement',
 	#instVars : [
 		'map',
 		'cameraSurface',
@@ -13,30 +13,34 @@ Class {
 		'focalLens',
 		'scale'
 	],
-	#category : #'MSeven-POC'
+	#category : 'MSeven-POC',
+	#package : 'MSeven',
+	#tag : 'POC'
 }
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 MSevenAeSurfaceBlElement4 >> aeDrawGeometryOn: aeCanvas [
 	"Ignore geometry and other visual properties and directly show a fresh camera surface."
 
 	| newScale |
-	pattern ifNil:[ ^ self ].
+	pattern ifNil: [ ^ self ].
 
 	self refreshCameraSurface.
-	
+
 	"update scale factor"
-	newScale := (self size / cameraResolution).
-	newScale := (newScale x < newScale y ifTrue:[newScale x] ifFalse:[newScale y]).
-	self scaleFactor: newScale. 
-	
+	newScale := self size / cameraResolution.
+	newScale := newScale x < newScale y
+		            ifTrue: [ newScale x ]
+		            ifFalse: [ newScale y ].
+	self scaleFactor: newScale.
+
 	aeCanvas privateAeCairoContext
-		source: pattern;
+		sourcePattern: pattern;
 		rectangleTo: self size;
 		fill
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement4 >> cameraPosition: aPoint cameraAltitude: anAltitude cameraAngle: anAngle [
 
 	cameraPosition := aPoint.
@@ -45,7 +49,7 @@ MSevenAeSurfaceBlElement4 >> cameraPosition: aPoint cameraAltitude: anAltitude c
 	self invalidate
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement4 >> cameraResolution: aPoint [
 
 	cameraResolution = aPoint ifTrue:[ ^ self ].
@@ -54,7 +58,7 @@ MSevenAeSurfaceBlElement4 >> cameraResolution: aPoint [
 	self prepareViewTextureBuffer
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenAeSurfaceBlElement4 >> initialize [
 
 	super initialize.
@@ -66,7 +70,7 @@ MSevenAeSurfaceBlElement4 >> initialize [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement4 >> map: aForm cameraResolution: aPoint [
 
 	map := aForm flipHorizontally.
@@ -75,7 +79,7 @@ MSevenAeSurfaceBlElement4 >> map: aForm cameraResolution: aPoint [
 	self prepareViewTextureBuffer.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement4 >> prepareViewTextureBuffer [
 
 	"prepare view texture buffer"
@@ -88,7 +92,7 @@ MSevenAeSurfaceBlElement4 >> prepareViewTextureBuffer [
 	pattern filter: AeCairoSamplingFilter nearest.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 
 	| width height halfWidth halfHeight sin cos beginHeight bufferAddress horizontalLineByteLength altitude |
@@ -144,7 +148,7 @@ MSevenAeSurfaceBlElement4 >> refreshCameraSurface [
 	cameraSurface markDirty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MSevenAeSurfaceBlElement4 >> scaleFactor: aFloat [
 
 	scaleFactor = aFloat ifTrue:[ ^ self ].
